@@ -3,6 +3,7 @@ import time
 
 import cv2
 
+from commons import swipe_left
 from settings import SCREENSHOT_PATH
 from utilites import ImageComparison
 
@@ -60,7 +61,7 @@ def is_main_menu():
 #     print("цикл повторился 20 раз. выход")
 
 
-def intro():
+def close_intro_ads():
     """
     max_windows_to_close - во время интро может быть очень много предложений к покупке
     :return:
@@ -85,20 +86,48 @@ def intro():
                 time.sleep(time_to_wait_before_new_attempt)
                 continue
 
+def check_if_menu_specials_displayed():
+    number_of_attempts = 3
+    time_to_wait_between_attempts = 2
+    target = "images/SPECIALS.png"
+    img = "images/screenshots/ad.JPG"
+
+    for _ in range(number_of_attempts):
+        # take_screenshot()
+        img_comp_obj = ImageComparison(target, img)
+        if img_comp_obj.is_target_on_image():
+            print('OK - menu SPECIAL')
+            return
+        time.sleep(time_to_wait_between_attempts)
+        continue
+    assert "target with text 'SPECIAL' was not found"
 
 
-# intro()
+# close_intro_ads()
 # enter_in_
+# check_if_menu_specials_displayed()
+
+def open_page_2():
+    pass
+
+def watch_and_close_ad():
+    pass
 
 
-def watch_ads():
+def watch_all_ads_on_the_page():
     target = "images/watch.png"
     img = "images/screenshots/ad.JPG"
     img_comp_obj = ImageComparison(target, img)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
+        watch_and_close_ad()
+        check_if_menu_specials_displayed()
+        swipe_left(percentage=20)
 
-watch_ads()
+watch_all_ads_on_the_page()
+open_page_2()
+watch_all_ads_on_the_page()
+print("ВСЁ!!!!")
 
 # заходим в меню где реклама
 
