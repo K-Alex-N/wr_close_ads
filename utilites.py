@@ -36,9 +36,22 @@ class ImageComparison:
     def get_target_center_coords(self):
         # Х = коорд левой точки + половина ширины таргета
         x, y = self.top_left_target_coords
-        # print(x + self.target_w/2, y + self.target_h/2)
+        print(x + self.target_w/2, y + self.target_h/2)
         return x + self.target_w / 2, y + self.target_h / 2
 
     def tap_on_target(self):
+        self.show_found_object()
         x, y = self.get_target_center_coords()
         tap(x, y)
+
+    def show_found_object(self):
+        bottom_right = (self.top_left_target_coords[0],
+                        self.top_left_target_coords[1])
+        cv.rectangle(self.img,
+                     self.top_left_target_coords,
+                     bottom_right,
+                     255,
+                     2)
+        cv.imshow('Detected Point', self.img)
+        cv.waitKey(0)
+        cv.destroyAllWindows()

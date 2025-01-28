@@ -92,8 +92,13 @@ def intro():
 
 
 def watch_ads():
+    target = "images/watch.png"
+    img = "images/screenshots/ad.JPG"
+    img_comp_obj = ImageComparison(target, img)
+    if img_comp_obj.is_target_on_image():
+        img_comp_obj.tap_on_target()
 
-
+watch_ads()
 
 # заходим в меню где реклама
 
