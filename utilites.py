@@ -1,23 +1,24 @@
 import cv2 as cv
 
+from adb import tap
+
 
 def last_screenshot():
-    pass
+    return "images/screenshots/1737918907.3581278.png"
 
 
 class ImageComparison:
 
     def __init__(self, target_path, img_path=last_screenshot()):
         self.target = cv.imread(target_path, 0)
-        # self.img = cv.imread(img_path, 0)
-        self.img = cv.imread("images/screenshots/1737918907.3581278.png", 0)
-        self.target_w = self.target.shape[1]
-        self.target_h = self.target.shape[0]
+        self.img = cv.imread(img_path, 0)
+        self.target_w: int = self.target.shape[1]
+        self.target_h: int = self.target.shape[0]
 
-        self.target_top_left_coords = None
+        self.top_left_target_coords = None
 
-    def save_target_coords(self, top_left):
-        self.target_top_left_coords = top_left
+    def save_top_left_target_coords(self, top_left):
+        self.top_left_target_coords = top_left
 
     # def is_target_on_image(self, threshold=0.9, method=cv.TM_CCOEFF_NORMED):
     def is_target_on_image(self):
@@ -26,13 +27,18 @@ class ImageComparison:
 
         threshold = 0.9
         if max_val >= threshold:
-            self.save_target_coords(max_loc)
+            self.save_top_left_target_coords(max_loc)
+            print("detected !!!")
             return True
+        print("not found")
         return False
 
-    def find_target_center_on_img(self):
+    def get_target_center_coords(self):
         # Х = коорд левой точки + половина ширины таргета
-        pass
+        x, y = self.top_left_target_coords
+        # print(x + self.target_w/2, y + self.target_h/2)
+        return x + self.target_w / 2, y + self.target_h / 2
 
     def tap_on_target(self):
-        w, h = self.find_cord_of_target_on_img()
+        x, y = self.get_target_center_coords()
+        tap(x, y)

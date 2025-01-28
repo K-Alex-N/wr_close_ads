@@ -44,13 +44,13 @@ def is_main_menu():
 #         если ок то выходим
 
 # for _ in range(20):
-for _ in range(1):
-    # take_screenshot()
-    img_comp_obj = ImageComparison("images/close_first_windows.png")
-    if img_comp_obj.is_target_on_image():
-        print("detected !!!")
-        tap_on_target()
-#         time.sleep(3)
+# for _ in range(1):
+#     time.sleep(2)
+#     # take_screenshot()
+#     img_comp_obj = ImageComparison("images/close_first_windows.png")
+#     if img_comp_obj.is_target_on_image():
+#         print("detected !!!")
+#         img_comp_obj.tap_on_target()
 #     elif is_main_menu():
 #         break
 #     else:
@@ -58,6 +58,41 @@ for _ in range(1):
 #         break
 # else:
 #     print("цикл повторился 20 раз. выход")
+
+
+def intro():
+    """
+    max_windows_to_close - во время интро может быть очень много предложений к покупке
+    :return:
+    """
+    target = "images/close_first_windows.png"
+    max_windows_to_close = 20
+    max_screenshots_to_take_for_repeat_check = 5
+    time_for_new_window_load_completion = 1.5
+    time_to_wait_before_new_attempt = 0.5
+
+    for i in range(max_windows_to_close):
+        time.sleep(time_for_new_window_load_completion)
+        print(f"Закрываем рекламное предложение номер {i}")
+
+        for _ in range(max_screenshots_to_take_for_repeat_check):
+            take_screenshot()
+            img_comp_obj = ImageComparison(target)
+            if img_comp_obj.is_target_on_image():
+                img_comp_obj.tap_on_target()
+                break
+            else:
+                time.sleep(time_to_wait_before_new_attempt)
+                continue
+
+
+
+# intro()
+# enter_in_
+
+
+def watch_ads():
+
 
 
 # заходим в меню где реклама
