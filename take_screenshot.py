@@ -1,5 +1,6 @@
 import os
 import subprocess
+import time
 
 from settings import SCREENSHOT_PATH
 
@@ -8,8 +9,8 @@ from settings import SCREENSHOT_PATH
 # img = subprocess.run(['adb', 'exec-out', 'screencap', '-p'], stdout=subprocess.PIPE).stdout  # получаем файл
 # subprocess.run(['adb', 'exec-out', 'screencap', '-p', '>', {SCREENSHOT_PATH}], stdout=file, check=True)
 # subprocess.run(['adb', 'exec-out', 'screencap', '-p'], stdout=SCREENSHOT_PATH, check=True)
-output_path="images/screenshot.png"
-with open(output_path, "wb") as file:
+# output_path=f"images/screenshots/{time.time()}.png"
+with open(SCREENSHOT_PATH, "wb") as file:
     subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
 

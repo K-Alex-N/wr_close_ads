@@ -1,33 +1,15 @@
+import subprocess
+import time
 
 import cv2
 
+from settings import SCREENSHOT_PATH
+from utilites import ImageComparison
+
+
 def take_screenshot():
-    # КОД ОТ ИИ
-    # pip     install    adb    - а зачем это?????????????????
-
-    from adb import Client
-    import cv2
-    import numpy as np
-
-    # Подключение к устройству
-    client = Client(host='127.0.0.1', port=5037)
-    device = client.device("emulator-5554")  # Замените на имя вашего устройства
-
-    # Сделать скриншот
-    result = device.screencap()
-
-    # Преобразовать данные скриншота в изображение
-    image = cv2.imdecode(np.frombuffer(result, np.uint8), cv2.IMREAD_COLOR)
-
-    # Показать скриншот (необязательно)
-    cv2.imshow("Screenshot", image)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    # Сохранить скриншот
-    cv2.imwrite("screenshot.png", image)
-
-    pass
+    with open(SCREENSHOT_PATH, "wb") as file:
+        subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
 
 def close_window_if_possible():
@@ -36,19 +18,60 @@ def close_window_if_possible():
 
     pass
 
+
 # пока просто закрыть первые рекламы!!!!!!!!!!!!!!!!!
 # стартуем игру руками
 
-while True:
-    take_screenshot()
-    # check_content()
-    if is_ads_button_present():
-        take_coords_of_ads_button()
-        click_ads()
-        close_ads()
-    elif if_close_button_present:
-        close_window()
-    else:
-        print("END!!!")
-        break
+# закрываем все предложения которые при старте
 
+
+def is_object_on_screenshot(obj):
+
+    pass
+
+
+def tap_on_object():
+    pass
+
+
+def is_main_menu():
+    pass
+
+#     берем скриншот
+#     проверяем есть ли крестик
+#         затем жмем в то место где был обнаружен крестик
+#     если крестика нето то проверяем наличие входа в главное меню
+#         если ок то выходим
+
+# for _ in range(20):
+for _ in range(1):
+    # take_screenshot()
+    img_comp_obj = ImageComparison("images/close_first_windows.png")
+    if img_comp_obj.is_target_on_image():
+        print("detected !!!")
+        tap_on_target()
+#         time.sleep(3)
+#     elif is_main_menu():
+#         break
+#     else:
+#         print("ничего не найдено")
+#         break
+# else:
+#     print("цикл повторился 20 раз. выход")
+
+
+# заходим в меню где реклама
+
+
+# while True:
+#     take_screenshot()
+#     # check_content()
+#     if is_ads_button_present():
+#         take_coords_of_ads_button()
+#         click_ads()
+#         close_ads()
+#     elif if_close_button_present:
+#         close_window()
+#     else:
+#         print("END!!!")
+#         break
