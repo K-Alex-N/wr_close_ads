@@ -1,16 +1,27 @@
+import os
+from venv import logger
+
 import cv2 as cv
 
 from adb import tap
 
 
-def last_screenshot():
-    return "images/screenshots/1737918907.3581278.png"
+def get_last_screenshot_path():
+    files = os.listdir("screenshots")
+    files = [f"screenshots/{file}" for file in files]
+    last_screenshot_path = max(files, key=os.path.getctime)
+    logger.info(last_screenshot_path)
+    return last_screenshot_path
+    # return "images/screenshots/1737918907.3581278.png"
 
+get_last_screenshot_path()
 
 class ImageComparison:
 
-    def __init__(self, target_path, img_path=last_screenshot()):
+    def __init__(self, target_path, img_path=None):
         self.target = cv.imread(target_path, 0)
+        if not img_path:
+            img_path = get_last_screenshot_path()
         self.img = cv.imread(img_path, 0)
         self.target_w: int = self.target.shape[1]
         self.target_h: int = self.target.shape[0]
@@ -26,13 +37,13 @@ class ImageComparison:
         result = cv.matchTemplate(self.img, self.target, cv.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
-        print(max_val)
+        # print(max_val)
         threshold = 0.9
         if max_val >= threshold:
             self.save_top_left_target_coords(max_loc)
-            print("detected !!!")
+            logger.info("Target detected")
             return True
-        print("not found")
+        logger.error("Target not found")
         return False
 
     def get_target_center_coords(self):

@@ -5,14 +5,16 @@ import cv2
 
 from adb import start_app
 from commons import swipe_left
+from log.log import logger
 from settings import SCREENSHOT_PATH
 from utilites import ImageComparison
 
 
-def print_log(msg: str):
-    print()
+# def print_log(msg: str):
+#     print()
 
 def take_screenshot():
+    logger.info("Получаем скриншот")
     with open(SCREENSHOT_PATH, "wb") as file:
         subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
@@ -77,14 +79,15 @@ def close_intro_ads():
     time_to_wait_before_new_attempt = 0.5
 
     for i in range(max_windows_to_close):
+        logger.info(f"Закрываем рекламу номер {i}")
         time.sleep(time_for_new_window_load_completion)
-        print(f"Закрываем рекламное предложение номер {i}")
 
         for _ in range(max_screenshots_to_take_for_repeat_check):
             take_screenshot()
             img_comp_obj = ImageComparison(target)
             if img_comp_obj.is_target_on_image():
                 img_comp_obj.tap_on_target()
+
                 break
             else:
                 time.sleep(time_to_wait_before_new_attempt)

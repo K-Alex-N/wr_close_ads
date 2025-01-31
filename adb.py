@@ -11,6 +11,8 @@
 import subprocess
 from typing import Union
 
+from log.log import logger
+
 
 def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
     if isinstance(command, str):
@@ -29,8 +31,10 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 
 
 def tap(x, y):
+    logger.info(f"Нажимаем на {x} {y}")
     execute(f"adb shell input tap {x} {y}")
 
 def start_app():
+    logger.info("Запуск игры")
     execute("adb shell am start -n com.pixonic.wwr/com.unity3d.player.UnityPlayerActivity")
 
