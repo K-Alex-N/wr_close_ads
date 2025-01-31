@@ -1,0 +1,7 @@
+2025-01-31 18:38:59,012 - log.log - INFO - \u0424\u0443\u043d\u043a\u0446\u0438\u044f my_function \u0432\u044b\u0437\u0432\u0430\u043d\u0430
+2025-01-31 18:38:59,012 - log.log - ERROR - \u041f\u0440\u043e\u0438\u0437\u043e\u0448\u043b\u0430 \u043e\u0448\u0438\u0431\u043a\u0430: [Errno 2] No such file or directory: 'main.pyssss'
+2025-01-31 18:46:33,833 - log.log - INFO - \u0424\u0443\u043d\u043a\u0446\u0438\u044f my_function \u0432\u044b\u0437\u0432\u0430\u043d\u0430
+2025-01-31 18:46:33,855 - log.log - ERROR - \u041f\u0440\u043e\u0438\u0437\u043e\u0448\u043b\u0430 \u043e\u0448\u0438\u0431\u043a\u0430: [Errno 2] No such file or directory: 'main.pyssss'
+2025-01-31 18:47:10,252 - log.log - INFO - \u0424\u0443\u043d\u043a\u0446\u0438\u044f my_function \u0432\u044b\u0437\u0432\u0430\u043d\u0430
+2025-01-31 18:49:46,920 - log.log - INFO - \u0424\u0443\u043d\u043a\u0446\u0438\u044f my_function \u0432\u044b\u0437\u0432\u0430\u043d\u0430
+2025-01-31 18:51:07,654 - log.log - INFO - \u0424\u0443\u043d\u043a\u0446\u0438\u044f my_function \u0432\u044b\u0437\u0432\u0430\u043d\u0430

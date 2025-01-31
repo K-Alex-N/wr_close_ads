@@ -3,10 +3,14 @@ import time
 
 import cv2
 
+from adb import start_app
 from commons import swipe_left
 from settings import SCREENSHOT_PATH
 from utilites import ImageComparison
 
+
+def print_log(msg: str):
+    print()
 
 def take_screenshot():
     with open(SCREENSHOT_PATH, "wb") as file:
@@ -103,7 +107,7 @@ def check_if_menu_specials_displayed():
     assert "target with text 'SPECIAL' was not found"
 
 
-# close_intro_ads()
+
 # enter_in_
 # check_if_menu_specials_displayed()
 
@@ -114,9 +118,21 @@ def watch_and_close_ad():
     pass
 
 
+def detection_of_active_ad_button():
+    """
+    no-active button (in HSV) = 162 97 88
+    active - 176 230 153
+
+    я написал HSV но в Пэйнте было HSL.
+    мб перепроверить цвет как советуют на этой страннице
+    https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
+    :return:
+    """
+
+
 def watch_all_ads_on_the_page():
     target = "images/watch.png"
-    img = "images/screenshots/ad.JPG"
+    img = "images/screenshots/ad22.JPG"
     img_comp_obj = ImageComparison(target, img)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
@@ -124,10 +140,14 @@ def watch_all_ads_on_the_page():
         check_if_menu_specials_displayed()
         swipe_left(percentage=20)
 
-watch_all_ads_on_the_page()
-open_page_2()
-watch_all_ads_on_the_page()
-print("ВСЁ!!!!")
+start_app()
+time.sleep(5)
+close_intro_ads()
+
+# watch_all_ads_on_the_page()
+# open_page_2()
+# watch_all_ads_on_the_page()
+print(">>>>>>>>>>>>ВСЁ>>>>>>>>>>>>")
 
 # заходим в меню где реклама
 

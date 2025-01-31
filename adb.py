@@ -15,6 +15,7 @@ from typing import Union
 def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
     if isinstance(command, str):
         command = command.split(' ')
+        print(command)
 
     result = subprocess.run(command,
                             stdout=subprocess.PIPE,
@@ -29,3 +30,7 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 
 def tap(x, y):
     execute(f"adb shell input tap {x} {y}")
+
+def start_app():
+    execute("adb shell am start -n com.pixonic.wwr/com.unity3d.player.UnityPlayerActivity")
+

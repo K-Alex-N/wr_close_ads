@@ -26,6 +26,7 @@ class ImageComparison:
         result = cv.matchTemplate(self.img, self.target, cv.TM_CCOEFF_NORMED)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
+        print(max_val)
         threshold = 0.9
         if max_val >= threshold:
             self.save_top_left_target_coords(max_loc)
