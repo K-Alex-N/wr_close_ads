@@ -2,11 +2,12 @@ import subprocess
 import time
 
 import cv2
+from numpy.ma.core import logical_or
 
 from adb import start_app
 from commons import swipe_left
 from log.log import logger
-from settings import SCREENSHOT_PATH
+from settings import SCREENSHOT_PATH, TARGETS_FOLDER
 from utilites import ImageComparison
 
 
@@ -20,7 +21,7 @@ def take_screenshot():
 
 
 def close_window_if_possible():
-    target_img_path = "images/close_first_windows.png"
+    target_img_path = "images/targets/close_first_windows.png"
     target = cv2.imread(target_img_path, 0)
 
     pass
@@ -72,26 +73,38 @@ def close_intro_ads():
     max_windows_to_close - во время интро может быть очень много предложений к покупке
     :return:
     """
-    target = "images/close_first_windows.png"
-    max_windows_to_close = 20
-    max_screenshots_to_take_for_repeat_check = 5
+    target1 = "close_first_windows.png"
+    target2 = "ok.png"
+    targets = [f"{TARGETS_FOLDER}{target}" for target in [target1, target2]]
+    # НЕСКОЛЬКО ТАРГЕТОВ!
+    max_windows_to_close = 12
+    max_screenshots_to_take_for_repeat_check = 2
     time_for_new_window_load_completion = 1.5
     time_to_wait_before_new_attempt = 0.5
 
     for i in range(max_windows_to_close):
-        logger.info(f"Закрываем рекламу номер {i}")
+        logger.info(f"Закрываем рекламу номер {i+1}")
         time.sleep(time_for_new_window_load_completion)
 
-        for _ in range(max_screenshots_to_take_for_repeat_check):
+        for k in range(max_screenshots_to_take_for_repeat_check):
+            logger.info(f"Попытка номер:{k+1}")
             take_screenshot()
-            img_comp_obj = ImageComparison(target)
-            if img_comp_obj.is_target_on_image():
-                img_comp_obj.tap_on_target()
 
-                break
-            else:
-                time.sleep(time_to_wait_before_new_attempt)
-                continue
+            for target in targets:
+                logger.info(f"Ищем: {target}")
+                img_comp_obj = ImageComparison(target)
+                if img_comp_obj.is_target_on_image():
+                    img_comp_obj.tap_on_target()
+                    break
+                # else:
+                #     continue
+            time.sleep(time_to_wait_before_new_attempt)
+
+        # проверка наличия кнопки Battle
+        # закрыть его
+        # выйти из интро
+
+
 
 def check_if_menu_specials_displayed():
     number_of_attempts = 3
@@ -133,15 +146,53 @@ def detection_of_active_ad_button():
     """
 
 
-def watch_all_ads_on_the_page():
-    target = "images/watch.png"
-    img = "images/screenshots/ad22.JPG"
-    img_comp_obj = ImageComparison(target, img)
+def tap_button_watch():
+    target = f"{TARGETS_FOLDER}watch.png"
+    take_screenshot()
+    # СТРАВНЕНИЕ ЦВЕТНЫХ ТАРГЕТОВ !!!!!!!!!!!!
+    img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
-        watch_and_close_ad()
-        check_if_menu_specials_displayed()
-        swipe_left(percentage=20)
+
+
+def tap_button_get():
+    target = f"{TARGETS_FOLDER}get.png"
+    take_screenshot()
+    img_comp_obj = ImageComparison(target)
+    if img_comp_obj.is_target_on_image():
+        img_comp_obj.tap_on_target()
+
+
+def tap_button_ok():
+    target = f"{TARGETS_FOLDER}ok.png"
+    take_screenshot()
+    img_comp_obj = ImageComparison(target)
+    if img_comp_obj.is_target_on_image():
+        img_comp_obj.tap_on_target()
+
+
+def watch_all_ads_on_the_page():
+    while True:
+        # if not is_menu_special():
+        #     break
+        tap_button_watch()
+        # watch_and_close_ad()
+        for _ in range(90):
+            time.sleep(1)
+            tap_button_get()
+        tap_button_ok()
+
+        target = "images/watch.png"
+        take_screenshot()
+        # img = "images/screenshots/ad22.JPG"
+        # img_comp_obj = ImageComparison(target, img)
+        img_comp_obj = ImageComparison(target)
+        if img_comp_obj.is_target_on_image():
+            img_comp_obj.tap_on_target()
+
+
+            check_if_menu_specials_displayed()
+            swipe_left(percentage=20)
 
 start_app()
 time.sleep(5)
@@ -150,7 +201,7 @@ close_intro_ads()
 # watch_all_ads_on_the_page()
 # open_page_2()
 # watch_all_ads_on_the_page()
-print(">>>>>>>>>>>>ВСЁ>>>>>>>>>>>>")
+logger.info(">>>>>>>>>>>>ВСЁ>>>>>>>>>>>>")
 
 # заходим в меню где реклама
 

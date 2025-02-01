@@ -26,7 +26,8 @@ class ColoredFormatter(logging.Formatter):
 logging.basicConfig(level=logging.DEBUG,
                     # filename='app.log',
                     # encoding='utf-8',
-                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    # format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 
 logger = logging.getLogger(__name__)

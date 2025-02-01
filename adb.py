@@ -17,7 +17,6 @@ from log.log import logger
 def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
     if isinstance(command, str):
         command = command.split(' ')
-        print(command)
 
     result = subprocess.run(command,
                             stdout=subprocess.PIPE,
@@ -25,7 +24,7 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
                             text=True)
 
     if result.returncode != 0:
-        print(f'Failed execute command: {result.stderr}')
+        logger.error(f'Failed execute command: {result.stderr}')
 
     return result
 

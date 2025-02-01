@@ -4,17 +4,18 @@ from venv import logger
 import cv2 as cv
 
 from adb import tap
+from settings import SCREENSHOT_FOLDER
 
 
 def get_last_screenshot_path():
-    files = os.listdir("screenshots")
-    files = [f"screenshots/{file}" for file in files]
+    files = os.listdir(SCREENSHOT_FOLDER)
+    files = [f"{SCREENSHOT_FOLDER}{file}" for file in files]
     last_screenshot_path = max(files, key=os.path.getctime)
     logger.info(last_screenshot_path)
     return last_screenshot_path
     # return "images/screenshots/1737918907.3581278.png"
 
-get_last_screenshot_path()
+# get_last_screenshot_path()
 
 class ImageComparison:
 
@@ -49,7 +50,7 @@ class ImageComparison:
     def get_target_center_coords(self):
         # Х = коорд левой точки + половина ширины таргета
         x, y = self.top_left_target_coords
-        print(x + self.target_w / 2, y + self.target_h / 2)
+        # print(x + self.target_w / 2, y + self.target_h / 2)
         return x + self.target_w / 2, y + self.target_h / 2
 
     def tap_on_target(self):
