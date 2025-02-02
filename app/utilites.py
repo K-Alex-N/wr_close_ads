@@ -60,11 +60,20 @@ def build_targets_list(*targets):
     return [f"{TARGETS_DIR}{target}" for target in [*targets]]
 
 
+def is_loader_present():
+    target = f"{TARGETS_DIR}loader.png"
+    logger.info(f"Ищем: {target}")
+    img_comp_obj = ImageComparison(target)
+    if img_comp_obj.is_target_on_image():
+        logger.info("Обнаружен loader")
+        return True
+
 def close_intro_ads():
     """
     max_windows_to_close - во время интро может быть очень много предложений к покупке
     """
     targets = build_targets_list(
+        "yes.png",  # так как можно попасть в зацыкливание если появляется one-time offer
         "close_first_windows.png",
         "ok.png",
         # "",
@@ -82,6 +91,10 @@ def close_intro_ads():
             logger.info(f"Попытка номер:{k + 1}")
             take_screenshot()
 
+            if is_loader_present():
+                time.sleep(0.5)
+                continue
+
             for target in targets:
                 logger.info(f"Ищем: {target}")
                 img_comp_obj = ImageComparison(target)
@@ -98,8 +111,9 @@ def close_intro_ads():
 def is_menu_special():
     target = f"{TARGETS_DIR}specials.png"
     logger.info(f"Ищем: {target}")
-    img = "images/screenshots/specials.png"
-    img_comp_obj = ImageComparison(target, img)
+    # img = "images/screenshots/specials.png"
+    # img_comp_obj = ImageComparison(target, img)
+    img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         return True
 
@@ -113,8 +127,14 @@ def enter_menu_special():
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
 
-    time.sleep(0.5)
-    is_menu_special()
+    for _ in range(3):
+        time.sleep(0.5)
+        take_screenshot()
+        if is_menu_special():
+            break
+    else:
+        logger.error("Не найдено меню specials")
+
     # if not is_menu_special():
     #     logger.error("Меню specials не открылось")
 
@@ -202,6 +222,8 @@ def create_low_and_height_color(button_color):
 
 
 def tap_button_watch():
+    # сделать повторение т.к. кнопка watch может появиться не сразу
+
     target = f"{TARGETS_DIR}watch.png"
     img = "images/screenshots/specials.png"
     # take_screenshot()
