@@ -25,12 +25,16 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 
     return result
 
-def turn_off_music():
-    logger.info("Устанавливаем нулевую громкость музыики")
-    # execute("adb shell settings put system volume_music 0")
-    # execute("adb shell settings put system volume_system 0")
-    # execute("adb shell settings put system volume_ring 0")
-    print(execute("adb shell settings get system volume_music"))
+def set_media_sound_volume(volume: int):
+    execute(f"adb shell cmd media_session volume --show --stream 3 --set {volume}")
+
+def turn_off_media_sound():
+    logger.info("Устанавливаем громкость музыки на ноль")
+    set_media_sound_volume(0)
+
+def set_max_media_sound():
+    logger.info("Устанавливаем максимальный уровень громкости музыки")
+    set_media_sound_volume(15)
 
 def tap(x, y):
     logger.info(f"Нажимаем на {x} {y}")
