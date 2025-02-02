@@ -25,6 +25,9 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 
     return result
 
+def turn_off_music():
+    logger.info("Устанавливаем нулевую громкость музыики")
+    execute("adb shell settings put system volume_music 0")
 
 def tap(x, y):
     logger.info(f"Нажимаем на {x} {y}")

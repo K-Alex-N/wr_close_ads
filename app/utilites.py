@@ -4,6 +4,7 @@ import time
 from venv import logger
 
 import cv2 as cv
+import numpy as np
 
 from app.adb import tap
 from app.commons import swipe_left
@@ -21,7 +22,7 @@ def get_last_screenshot_path():
     files = os.listdir(SCREENSHOTS_DIR)
     files = [f"{SCREENSHOTS_DIR}{file}" for file in files]
     last_screenshot_path = max(files, key=os.path.getctime)
-    logger.info(last_screenshot_path)
+    logger.info(f"Берем скриншот: {last_screenshot_path}")
     return last_screenshot_path
     # return "images/screenshots/1737918907.3581278.png"
 
@@ -62,7 +63,6 @@ def build_targets_list(*targets):
 def close_intro_ads():
     """
     max_windows_to_close - во время интро может быть очень много предложений к покупке
-    :return:
     """
     targets = build_targets_list(
         "close_first_windows.png",
@@ -189,27 +189,43 @@ def watch_and_close_ad():
 
 
 def detection_of_active_ad_button():
-    """
-    no-active button (in HSV) = 162 97 88
-    active - 176 230 153
+    pass
 
-    я написал HSV но в Пэйнте было HSL.
-    мб перепроверить цвет как советуют на этой страннице
-    https://docs.opencv.org/4.x/df/d9d/tutorial_py_colorspaces.html
-    :return:
-    """
+
+def create_low_and_height_color(button_color):
+    low_color = []
+    height_color = []
+    for color in button_color:
+        low_color.append(color - 2)
+        height_color.append(color + 2)
+    return low_color, height_color
 
 
 def tap_button_watch():
     target = f"{TARGETS_DIR}watch.png"
-    # low_color =
-    # hight_color =
-
-    take_screenshot()
-    # cv.inRange(img, low_color, hight_color)
     img = "images/screenshots/specials.png"
+    # take_screenshot()
+    # button_color = [132, 179, 249]
+    # low_color, height_color = create_low_and_height_color(button_color)
+    # lower_color = np.array([*low_color])
+    # upper_color = np.array([*height_color])
+    img = cv.imread(img)
+    # img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 
+    # mask = cv.inRange(img_hsv, lower_color, upper_color)
+    # result = cv.bitwise_and(img, img, mask=mask)
+
+    # Отображение результата
+    # cv.imshow('Original', img)
+    # cv.imshow('Mask', mask)
+    # cv.imshow('Result', result)
+    # cv.waitKey(0)
+    # cv.destroyAllWindows()
+    #
     result = cv.matchTemplate(img, target, cv.TM_CCOEFF_NORMED)
+    # cv2.TM_SQDIFF
+    # cv2.TM_CCORR_NORMED
+
     min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
     # print(max_val)
