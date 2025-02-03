@@ -7,11 +7,11 @@ import cv2 as cv
 import numpy as np
 
 from app.adb import tap
-from app.commons import swipe_left
 from settings import SCREENSHOTS_DIR, TARGETS_DIR
 
 
 def take_screenshot():
+    # Можно ли это как то под общую обертку (как в модуле adb) запихнуть?
     logger.info("Получаем скриншот")
     # with open(SCREENSHOT_PATH, "wb") as file:
     with open(f"{SCREENSHOTS_DIR}{time.time()}.png", "wb") as file:
@@ -27,9 +27,6 @@ def get_last_screenshot_path():
     # return "images/screenshots/1737918907.3581278.png"
 
 
-# get_last_screenshot_path()
-
-
 def is_object_on_screenshot(obj):
     pass
 
@@ -38,61 +35,13 @@ def tap_on_object():
     pass
 
 
-
-
-
-#     берем скриншот
-#     проверяем есть ли крестик
-#         затем жмем в то место где был обнаружен крестик
-#     если крестика нето то проверяем наличие входа в главное меню
-#         если ок то выходим
-
-
 def build_targets_list(*targets):
     return [f"{TARGETS_DIR}{target}" for target in [*targets]]
 
+
 def take_all_targets_for_closing_ads():
     targets_list = os.listdir(f"{TARGETS_DIR}close_ads")
-    return build_targets_list(targets_list)
-
-def enter_menu_supply_center():
-    pass
-
-
-def check_if_menu_specials_displayed():
-    number_of_attempts = 3
-    time_to_wait_between_attempts = 2
-    target = "images/specials.png"
-    img = "images/screenshots/ad.JPG"
-
-    for _ in range(number_of_attempts):
-        # take_screenshot()
-        img_comp_obj = ImageComparison(target, img)
-        if img_comp_obj.is_target_on_image():
-            print('OK - menu SPECIAL')
-            return
-        time.sleep(time_to_wait_between_attempts)
-        continue
-    assert "target with text 'SPECIAL' was not found"
-
-
-# enter_in_
-# check_if_menu_specials_displayed()
-
-def open_page_2():
-    pass
-
-
-# def is_button_get_present():
-#     target = f"{TARGETS_DIR}get.png"
-#     img_comp_obj = ImageComparison(target)
-#     if img_comp_obj.is_target_on_image():
-#         return True
-#     return False
-
-
-
-
+    return [f"{TARGETS_DIR}close_ads/{target}" for target in [*targets_list]]
 
 
 def create_low_and_height_color(button_color):
@@ -241,7 +190,7 @@ def tap_button_watch3():
 
 def tap_button_get():
     target = f"{TARGETS_DIR}get.png"
-    for _ in range(2):
+    for _ in range(3):
         take_screenshot()
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
@@ -252,7 +201,7 @@ def tap_button_get():
 
 def tap_button_ok():
     target = f"{TARGETS_DIR}ok.png"
-    for _ in range(2):
+    for _ in range(3):
         take_screenshot()
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
@@ -261,12 +210,10 @@ def tap_button_ok():
     logger.error("button OK did not found")
 
 
-
-
-
 class ImageComparison:
 
     def __init__(self, target_path, img_path=None, method=5):
+        self.target_path = target_path
         self.target = cv.imread(target_path, 0)
         if not img_path:
             img_path = get_last_screenshot_path()
@@ -283,12 +230,11 @@ class ImageComparison:
 
     # def is_target_on_image(self, threshold=0.9, method=cv.TM_CCOEFF_NORMED):
     def is_target_on_image(self):
-        logger.info(f"Ищем: {self.target}")
+        logger.info(f"Ищем: {self.target_path}")
         result = cv.matchTemplate(self.img, self.target, self.method)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
-        # print(max_val)
-
+        logger.info(f"Трэшхолд = {max_val}")
         threshold = 0.9
         if max_val >= threshold:
             if self.method == 5:
