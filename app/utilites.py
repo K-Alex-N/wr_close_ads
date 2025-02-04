@@ -190,24 +190,26 @@ def tap_button_watch3():
 
 def tap_button_get():
     target = f"{TARGETS_DIR}get.png"
-    for _ in range(3):
+    number_of_attempts = 3
+    for _ in range(number_of_attempts):
         take_screenshot()
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
             img_comp_obj.tap_on_target()
             return
-    logger.error("button GET did not found")
+    logger.error(f"After {number_of_attempts} attempts button GET did not found")
 
 
 def tap_button_ok():
     target = f"{TARGETS_DIR}ok.png"
-    for _ in range(3):
+    number_of_attempts = 3
+    for _ in range(number_of_attempts):
         take_screenshot()
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
             img_comp_obj.tap_on_target()
             return
-    logger.error("button OK did not found")
+    logger.error(f"After {number_of_attempts} attempts button OK did not found")
 
 
 class ImageComparison:

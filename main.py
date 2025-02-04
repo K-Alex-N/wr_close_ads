@@ -1,9 +1,13 @@
 import time
 
-from app.adb import start_app, turn_off_media_sound, set_max_media_sound, tap_back, swipe_left
+from app.adb import start_app, turn_off_media_sound, set_max_media_sound, tap_back, swipe_left, start_adb_connection
 from app.intro import close_intro
 from app.menu_specials import watch_all_ads_in_menu_specials
 from app.utilites import take_all_targets_for_closing_ads
+
+
+
+# start_adb_connection()
 
 # start_app()
 # turn_off_media_sound()

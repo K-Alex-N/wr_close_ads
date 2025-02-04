@@ -9,19 +9,20 @@ from log.log import logger
 
 
 def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
-    if isinstance(command, str):
-        command = command.split()
-
+    command = command.split()
     result = subprocess.run(command,
                             stdout=subprocess.PIPE,
                             stderr=subprocess.PIPE,
                             text=True)
-
     if result.returncode != 0:
         logger.error(f'Failed execute command: {result.stderr}')
 
     return result
 
+
+def start_adb_connection():
+    execute("adb tcpip 5555")
+    execute("adb connect 192.168.1.46:5555")
 
 def set_media_sound_volume(volume: int):
     execute(f"adb shell cmd media_session volume --show --stream 3 --set {volume}")
