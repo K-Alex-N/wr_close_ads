@@ -26,15 +26,15 @@ def close_intro():
         # "",
     )
     max_windows_to_close = 12
-    max_screenshots_to_take_for_repeat_check = 2
+    max_retry = 2
     time_for_new_window_load_completion = 1.5
     time_to_wait_before_new_attempt = 0.5
 
     for i in range(max_windows_to_close):
-        logger.info(f"Закрываем рекламу номер {i + 1}")
+        logger.info(f"Закрываем интро номер {i + 1}")
         time.sleep(time_for_new_window_load_completion)
 
-        for k in range(max_screenshots_to_take_for_repeat_check):
+        for k in range(max_retry):
             logger.info(f"Попытка номер:{k + 1}")
             take_screenshot()
 
@@ -51,5 +51,8 @@ def close_intro():
 
             if is_main_menu():
                 return
+
+            # пробуем просто нажать в то место где крестик
+            # tap()
 
             time.sleep(time_to_wait_before_new_attempt)
