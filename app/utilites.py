@@ -7,6 +7,7 @@ import cv2 as cv
 import numpy as np
 
 from app.adb import tap
+from pages.targets import Targets
 from settings import SCREENSHOTS_DIR, TARGETS_DIR
 
 
@@ -35,13 +36,6 @@ def tap_on_object():
     pass
 
 
-def build_targets_list(*targets):
-    return [f"{TARGETS_DIR}{target}" for target in [*targets]]
-
-
-def take_all_targets_for_closing_ads():
-    targets_list = os.listdir(f"{TARGETS_DIR}close_ads")
-    return [f"{TARGETS_DIR}close_ads/{target}" for target in [*targets_list]]
 
 
 def create_low_and_height_color(button_color):
@@ -91,7 +85,7 @@ def tap_button_watch2():
 
 
 def tap_button_watch():
-    target = f"{TARGETS_DIR}watch.png"
+    target = Targets.MenuSpecials.button_watch
     method = 1  # TM_SQDIFF_NORMED
     # for method in [1, 5]:
     # img = "images/screenshots/specials.png"
@@ -189,7 +183,7 @@ def tap_button_watch3():
 
 
 def tap_button_get():
-    target = f"{TARGETS_DIR}get.png"
+    target = Targets.button_get
     number_of_attempts = 3
     for _ in range(number_of_attempts):
         take_screenshot()
@@ -201,7 +195,7 @@ def tap_button_get():
 
 
 def tap_button_ok():
-    target = f"{TARGETS_DIR}ok.png"
+    target = Targets.button_ok
     number_of_attempts = 3
     for _ in range(number_of_attempts):
         take_screenshot()
@@ -237,7 +231,7 @@ class ImageComparison:
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
         logger.info(f"Трэшхолд = {max_val}")
-        threshold = 0.9
+        threshold = 0.87
         if max_val >= threshold:
             if self.method == 5:
                 self.save_top_left_target_coords(max_loc)

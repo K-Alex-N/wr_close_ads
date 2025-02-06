@@ -1,13 +1,14 @@
 import time
 
-from app.main_menu import is_main_menu
+from app.adb import tap
+from pages.main_menu import is_main_menu
 from app.utilites import ImageComparison, build_targets_list, take_screenshot
 from log.log import logger
-from settings import TARGETS_DIR
+from pages.targets import Targets
 
 
 def is_loader_present():
-    target = f"{TARGETS_DIR}loader.png"
+    target = Targets.loader
     logger.info(f"Ищем: {target}")
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
@@ -53,6 +54,6 @@ def close_intro():
                 return
 
             # пробуем просто нажать в то место где крестик
-            # tap()
+            tap(2356, 56)
 
             time.sleep(time_to_wait_before_new_attempt)

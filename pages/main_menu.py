@@ -1,10 +1,10 @@
 from app.utilites import ImageComparison
 from log.log import logger
-from settings import TARGETS_DIR
+from pages.targets import Targets
 
 
 def is_main_menu():
-    target = f"{TARGETS_DIR}to_battle.png"
+    target = Targets.MainMenu.identifier
     logger.info(f"Ищем: {target}")
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():

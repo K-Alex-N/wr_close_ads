@@ -1,17 +1,18 @@
+import sys
 import time
 import cv2 as cv
 import numpy as np
 
 from app.adb import tap_back, swipe_left, tap
-from app.main_menu import is_main_menu
-from app.utilites import take_screenshot, ImageComparison, build_targets_list, tap_button_get, tap_button_watch, \
-    tap_button_ok, take_all_targets_for_closing_ads, get_last_screenshot_path
+from pages.main_menu import is_main_menu
+from app.utilites import take_screenshot, ImageComparison, tap_button_get, \
+    tap_button_ok, get_last_screenshot_path
 from log.log import logger
-from settings import TARGETS_DIR
+from pages.targets import Targets
 
 
 def is_menu_special():
-    target = f"{TARGETS_DIR}specials.png"
+    target = Targets.MenuSpecials.identifier
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         return True
@@ -19,7 +20,7 @@ def is_menu_special():
 
 def open_menu_special():
     take_screenshot()
-    target = f"{TARGETS_DIR}basket.png"
+    target = Targets.MainMenu.menu_specials_icon
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
@@ -34,15 +35,18 @@ def open_menu_special():
 
 
 def back_to_main_menu():
-    take_screenshot()
-    target = f"{TARGETS_DIR}to_hangar.png"
-    img_comp_obj = ImageComparison(target)
-    if img_comp_obj.is_target_on_image():
-        img_comp_obj.tap_on_target()
+    for _ in range(2):
+        take_screenshot()
+        target = Targets.MenuSpecials.back_to_main_menu
+        img_comp_obj = ImageComparison(target)
+        if img_comp_obj.is_target_on_image():
+            img_comp_obj.tap_on_target()
 
-    # if not is_main_menu():
-    #     return
+        if is_main_menu():
+            return
 
+    logger.error("Не получилось вернуться в главное меню")
+    sys.exit()
 
 def is_color_similar(pixel_color, target_color, tolerance=3):
     for i in range(3):
@@ -57,13 +61,13 @@ def get_coords_of_active_button():
     """"
     на текущем экране ищем активные кнопки
     """
-
+    target = Targets.MenuSpecials.button_watch
     # img_color = cv.imread('images/screenshots/ad.JPG')
     img_color = cv.imread(get_last_screenshot_path())
     img_gray = cv.cvtColor(img_color, cv.COLOR_BGR2GRAY)
-    target_color = cv.imread('images/targets/watch.png')
+    target_color = cv.imread(target)
     first_pixel_target_color = target_color[0, 0]
-    target_grey = cv.imread('images/targets/watch.png', 0)
+    target_grey = cv.imread(target, 0)
     w, h = target_grey.shape[::-1]
 
     res = cv.matchTemplate(img_gray, target_grey, cv.TM_CCOEFF_NORMED)
@@ -112,9 +116,11 @@ def get_button_watch_coords():
 
     back_to_main_menu()
     open_menu_special()  # либо мб сразу на главном меню искать иконку
+    # наверное нужно создать что то типа tap_menu_special - что означает что нет проверки
     if not is_menu_special():
         return None
 
+    # УБРАТЬ РЕКУРСИЮ или как то правильно ее закрывать
     get_button_watch_coords() # start recursion. it's watch ads on all pages.
 
 
@@ -128,6 +134,7 @@ def watch_all_ads_in_menu_specials():
         tap(*coords)
         time.sleep(1)
         watch_and_close_ad()
+        # иногда после рекламы нет вознаграждения т.к. нужно посмотреть несколько реклам
         tap_button_get()
         tap_button_ok()
 
@@ -149,18 +156,18 @@ def watch_all_ads_in_menu_specials():
 
 
 def is_google_play():
-    target = f"{TARGETS_DIR}google_play.png"
+    target = Targets.google_play
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         return True
 
 
 def watch_and_close_ad():
-    targets = take_all_targets_for_closing_ads()
+    targets = Targets.for_closing_ads()
     start_time = time.time()
     while True:
         tm = time.time() - start_time
-        print(tm)
+        print(tm)  # не видел чтобы это когда то печатавлось
         if tm > 90:
             logger.error("за 90 секунд не получилось закрыть рекламу")
             break
