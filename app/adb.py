@@ -21,6 +21,7 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 
 
 def start_adb_connection():
+    logger.info("Запуск соединения с телефоном")
     execute("adb tcpip 5555")
     execute("adb connect 192.168.1.46:5555")
 

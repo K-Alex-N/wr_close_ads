@@ -1,12 +1,12 @@
 import os
 import subprocess
 import time
-from venv import logger
 
 import cv2 as cv
 import numpy as np
 
 from app.adb import tap
+from log.log import logger
 from pages.targets import Targets
 from settings import SCREENSHOTS_DIR, TARGETS_DIR
 
@@ -34,8 +34,6 @@ def is_object_on_screenshot(obj):
 
 def tap_on_object():
     pass
-
-
 
 
 def create_low_and_height_color(button_color):
@@ -96,7 +94,7 @@ def tap_button_watch():
             img_comp_obj.tap_on_target()
             return
         else:
-            time.sleep(1)
+            wait(1)
             continue
 
 
@@ -182,6 +180,11 @@ def tap_button_watch3():
     #     img_comp_obj.tap_on_target()
 
 
+def wait(sec: int):
+    logger.info(f"Ждем {sec} секунд")
+    time.sleep(sec)
+
+
 def tap_button_get():
     target = Targets.button_get
     number_of_attempts = 3
@@ -208,13 +211,14 @@ def tap_button_ok():
 
 class ImageComparison:
 
-    def __init__(self, target_path, img_path=None, method=5):
+    def __init__(self, target_path, img_path=None, method=5, threshold=0.87):
         self.target_path = target_path
         self.target = cv.imread(target_path, 0)
         if not img_path:
             img_path = get_last_screenshot_path()
         self.img = cv.imread(img_path, 0)
         self.method: int = method
+        self.threshold = threshold
         self.target_w: int = self.target.shape[1]
         self.target_h: int = self.target.shape[0]
         self.img_w: int = self.img.shape[1]
@@ -230,16 +234,15 @@ class ImageComparison:
         result = cv.matchTemplate(self.img, self.target, self.method)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
-        logger.info(f"Трэшхолд = {max_val}")
-        threshold = 0.87
-        if max_val >= threshold:
+        # logger.info(f"Трэшхолд = {max_val}")
+        if max_val >= self.threshold:
             if self.method == 5:
                 self.save_top_left_target_coords(max_loc)
             elif self.method == 1:
                 self.save_top_left_target_coords(min_loc)
             logger.info("Target detected")
             return True
-        logger.error("Target not found")
+        logger.info(f"Target not found. Value: {max_val}")
         return False
 
     def get_target_center_coords(self):

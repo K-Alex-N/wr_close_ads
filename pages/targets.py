@@ -12,11 +12,24 @@ class Targets:
     class MainMenu:
         identifier = f"{TARGETS_DIR}to_battle.png"
         menu_specials_icon = f"{TARGETS_DIR}basket.png"
+        menu_supply_center_icon = f"{TARGETS_DIR}supply_center_icon.png"
+
 
     class MenuSpecials:
         identifier = f"{TARGETS_DIR}specials.png"
         back_to_main_menu = f"{TARGETS_DIR}to_hangar.png"
         button_watch = f"{TARGETS_DIR}watch.png"
+
+    class SupplyCenterMenu:
+        identifier = f"{TARGETS_DIR}supply_center.png"
+        back_to_main_menu = f"{TARGETS_DIR}back.png"
+        button_get_more = f"{TARGETS_DIR}get_more.png"
+        # open_ad  =   get more
+
+
+    class BlackMarketMenu:
+        identifier = f"{TARGETS_DIR}black_market.png"
+        # open_ad  =   open_for_free
 
     @staticmethod
     def for_closing_ads():
