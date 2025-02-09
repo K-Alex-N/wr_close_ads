@@ -1,14 +1,20 @@
-import cv2 as cv
-import numpy as np
+import sys
+import time
 
-from app.adb import tap
-from app.experiments.create_white_black_img import img_path
+import cv2 as cv
+
+from app.adb import tap, tap_back
 from app.utilites import ImageComparison, take_screenshot, get_last_screenshot_path
 from log.log import logger
+from pages.menu_specials import is_menu_special
 from pages.targets import Targets
 
 
-def is_target_on_screen(target, number_of_attempts = 2):
+def is_target_on_screen(target, number_of_attempts=2):
+    logger.info(f"Ищем: {target}")
+
+    # todo переписать эту функцию без использования класса ImageComparison
+
     for _ in range(number_of_attempts):
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
@@ -18,11 +24,12 @@ def is_target_on_screen(target, number_of_attempts = 2):
     logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
     return False
 
+
 def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of_attempts=2):
-    target =  cv.imread(target_path, 0)
+    target = cv.imread(target_path, 0)
 
     for attempt in range(number_of_attempts):
-        #debug
+        # debug
         if img_path:
             img = cv.imread(img_path, 0)
         else:
@@ -35,7 +42,7 @@ def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of
             logger.info("Target detected")
             break
 
-        logger.info(f"{attempt+1} attempt")
+        logger.info(f"{attempt + 1} attempt")
         take_screenshot()
 
     else:
@@ -44,11 +51,64 @@ def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of
 
     x, y = max_loc
     h, w = target.shape
-    tap(x + w / 2, y + h / 2)
-
-    # if is_target_on_screen(target):
+    tap(x + w // 2, y + h // 2)
 
 
 def is_button_get_on_screen():
     target = Targets.button_get
     return is_target_on_screen(target)
+
+
+def is_loader_on_screen():
+    target = Targets.loader
+    return is_target_on_screen(target)
+
+
+def stop():
+    logger.error("Остановка программы")
+    sys.exit()
+
+
+def is_google_play():
+    for target in Targets.google_play_targets:
+        if is_target_on_screen(target, number_of_attempts=1):
+            return True
+
+
+def watch_and_close_ad(check_func):
+    logger.info("Начался просмотр рекламы")
+    targets = Targets.for_closing_ads()
+    start_time = time.time()
+    while True:
+        take_screenshot()
+        for target in targets:
+            # if is_target_on_screen(targets, threshold=0.8):
+
+            img_comp_obj = ImageComparison(target, threshold=0.8)
+            if img_comp_obj.is_target_on_image():
+                img_comp_obj.tap_on_target()
+                break
+
+        if is_google_play():
+            tap_back()
+
+        if check_func():
+            logger.info("Реклама закончилась. Снова в текущем меню.")
+            break
+
+        ad_time = time.time() - start_time
+        logger.info(f"реклама длится: {ad_time} секунд")
+        if ad_time > 90:
+            logger.error("за 90 секунд не получилось закрыть рекламу")
+            stop()
+            break
+
+
+def tap_button_get():
+    target = Targets.button_get
+    find_and_tap(target)
+
+
+def tap_button_ok():
+    target = Targets.button_ok
+    find_and_tap(target)

@@ -5,7 +5,10 @@ from settings import TARGETS_DIR
 
 class Targets:
     loader = f"{TARGETS_DIR}loader.png"
-    google_play = f"{TARGETS_DIR}google_play.png"
+    google_play_targets = [
+        f"{TARGETS_DIR}google_play.png",
+        f"{TARGETS_DIR}google_play2.png",
+    ]
     button_ok = f"{TARGETS_DIR}ok.png"
     button_get = f"{TARGETS_DIR}get.png"
 
@@ -13,7 +16,7 @@ class Targets:
         identifier = f"{TARGETS_DIR}to_battle.png"
         menu_specials_icon = f"{TARGETS_DIR}basket.png"
         menu_supply_center_icon = f"{TARGETS_DIR}supply_center_icon.png"
-
+        black_market_menu = f"{TARGETS_DIR}black_market_menu_icon.png"
 
     class MenuSpecials:
         identifier = f"{TARGETS_DIR}specials.png"
@@ -23,13 +26,15 @@ class Targets:
     class SupplyCenterMenu:
         identifier = f"{TARGETS_DIR}supply_center.png"
         back_to_main_menu = f"{TARGETS_DIR}back.png"
+        button_get_supplies = f"{TARGETS_DIR}get_supplies.png"
         button_get_more = f"{TARGETS_DIR}get_more.png"
         # open_ad  =   get more
 
-
     class BlackMarketMenu:
         identifier = f"{TARGETS_DIR}black_market.png"
+        button_open_for_free = f"{TARGETS_DIR}open_for_free.png"
         # open_ad  =   open_for_free
+        back_to_main_menu = f"{TARGETS_DIR}back.png"
 
     @staticmethod
     def for_closing_ads():

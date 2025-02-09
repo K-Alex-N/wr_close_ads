@@ -14,7 +14,6 @@ from settings import SCREENSHOTS_DIR, TARGETS_DIR
 def take_screenshot():
     # Можно ли это как то под общую обертку (как в модуле adb) запихнуть?
     logger.info("Получаем скриншот")
-    # with open(SCREENSHOT_PATH, "wb") as file:
     with open(f"{SCREENSHOTS_DIR}{time.time()}.png", "wb") as file:
         subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
@@ -25,15 +24,6 @@ def get_last_screenshot_path():
     last_screenshot_path = max(files, key=os.path.getctime)
     logger.info(f"Берем скриншот: {last_screenshot_path}")
     return last_screenshot_path
-    # return "images/screenshots/1737918907.3581278.png"
-
-
-def is_object_on_screenshot(obj):
-    pass
-
-
-def tap_on_object():
-    pass
 
 
 def create_low_and_height_color(button_color):
@@ -185,33 +175,51 @@ def wait(sec: int):
     time.sleep(sec)
 
 
-def tap_button_get():
-    target = Targets.button_get
-    number_of_attempts = 3
-    for _ in range(number_of_attempts):
-        take_screenshot()
-        img_comp_obj = ImageComparison(target)
-        if img_comp_obj.is_target_on_image():
-            img_comp_obj.tap_on_target()
-            return
-    logger.error(f"After {number_of_attempts} attempts button GET did not found")
+def is_color_similar(pixel_color, target_color, tolerance=3):
+    for i in range(3):
+        # print(target_color[i])
+        if target_color[i] - tolerance <= pixel_color[i] <= target_color[i] + tolerance:
+            continue
+        return False
+    return True
 
 
-def tap_button_ok():
-    target = Targets.button_ok
-    number_of_attempts = 3
-    for _ in range(number_of_attempts):
-        take_screenshot()
-        img_comp_obj = ImageComparison(target)
-        if img_comp_obj.is_target_on_image():
-            img_comp_obj.tap_on_target()
-            return
-    logger.error(f"After {number_of_attempts} attempts button OK did not found")
+def get_coords_of_active_button():
+    """"
+    на текущем экране ищем активные кнопки
+    """
+    target = Targets.MenuSpecials.button_watch
+    # img_color = cv.imread('images/screenshots/ad.JPG')
+    img_color = cv.imread(get_last_screenshot_path())
+    img_gray = cv.cvtColor(img_color, cv.COLOR_BGR2GRAY)
+    target_color = cv.imread(target)
+    first_pixel_target_color = target_color[0, 0]
+    target_grey = cv.imread(target, 0)
+    w, h = target_grey.shape[::-1]
+
+    res = cv.matchTemplate(img_gray, target_grey, cv.TM_CCOEFF_NORMED)
+    threshold = 0.9
+    loc = np.where(res >= threshold)
+    # print(loc)
+    for pt in zip(*loc[::-1]):
+        # print(pt[0], pt[1])
+        x, y = pt[0], pt[1]
+        pixel_color = img_color[y, x]
+        # b, g, r = img_color[y, x]
+        # print(b, g, r)
+        # print(pixel_color)
+        # blue = pixel_color[0]
+        # green = pixel_color[1]
+        # red = pixel_color[2]
+        # print("RGB", red, green, blue, "\n")
+        if is_color_similar(pixel_color, first_pixel_target_color):
+            return x + w, y + h
+    return None
 
 
 class ImageComparison:
 
-    def __init__(self, target_path, img_path=None, method=5, threshold=0.87):
+    def __init__(self, target_path, img_path=None, method=5, threshold=0.8):
         self.target_path = target_path
         self.target = cv.imread(target_path, 0)
         if not img_path:
