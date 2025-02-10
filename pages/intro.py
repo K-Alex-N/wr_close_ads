@@ -9,11 +9,7 @@ def close_intro():
     """
     max_windows_to_close - во время интро может быть очень много предложений к покупке
     """
-    targets = Targets.build_targets_list(
-        "yes.png",  # так как можно попасть в зацыкливание если появляется one-time offer
-        "close_first_windows.png",
-        "ok.png",
-    )
+    targets = Targets.intro_targets
     max_windows_to_close = 15
     max_retry = 3
     time_for_new_window_load_completion = 1

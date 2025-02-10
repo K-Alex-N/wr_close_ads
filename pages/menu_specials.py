@@ -3,7 +3,7 @@ import sys
 from app.adb import tap, swipe_left
 from app.utilites import take_screenshot, get_coords_of_active_button
 from log.log import logger
-from pages.base_page import back_with_check
+
 
 from pages.main_menu import open_menu_special, is_menu_specials_icon_on_screen, is_main_menu
 from pages.targets import Targets
@@ -74,6 +74,7 @@ def try_get_button_watch_coords_on_current_page():
 
 # main function
 def watch_all_ads_in_menu_specials():
+    from pages.base_page import back_with_check
     from pages.base_page import tap_button_ok, tap_button_get
     from pages.base_page import is_button_get_on_screen
     from pages.base_page import watch_and_close_ad

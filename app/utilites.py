@@ -6,10 +6,10 @@ import time
 import cv2 as cv
 import numpy as np
 
-from main.adb import tap
+from app.adb import tap
 from log.log import logger
 from pages.targets import Targets
-from settings import SCREENSHOTS_DIR, TARGETS_DIR
+from settings import SCREENSHOTS_DIR
 
 
 def take_screenshot():
@@ -39,34 +39,34 @@ def create_low_and_height_color(button_color):
     return low_color, height_color
 
 
-def tap_button_watch2():
-    target = f"{TARGETS_DIR}watch.png"
-    img = "images/screenshots/specials.png"
-    img = cv.imread(img, 0)
-    img2 = img.copy()
-    target = cv.imread(target, 0)
-    w, h = target.shape[::-1]
-
-    methods = ['TM_CCOEFF', 'TM_CCOEFF_NORMED', 'TM_CCORR',
-               'TM_CCORR_NORMED', 'TM_SQDIFF', 'TM_SQDIFF_NORMED']
-
-    for meth in methods:
-        img = img2.copy()
-        method = getattr(cv, meth)
-
-        print(method)
-
-        result = cv.matchTemplate(img, target, method)
-        min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
-        print(f"Method:{method} = {max_val}")
-
-        # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
-        if method in [cv.TM_SQDIFF, cv.TM_SQDIFF_NORMED]:
-            top_left = min_loc
-        else:
-            top_left = max_loc
-        print(top_left)
-        bottom_right = (top_left[0] + w, top_left[1] + h)
+# def tap_button_watch2():
+#     target = f"{TARGETS_DIR}watch.png"
+#     img = "images/screenshots/specials.png"
+#     img = cv.imread(img, 0)
+#     img2 = img.copy()
+#     target = cv.imread(target, 0)
+#     w, h = target.shape[::-1]
+#
+#     methods = ['TM_CCOEFF', 'TM_CCOEFF_NORMED', 'TM_CCORR',
+#                'TM_CCORR_NORMED', 'TM_SQDIFF', 'TM_SQDIFF_NORMED']
+#
+#     for meth in methods:
+#         img = img2.copy()
+#         method = getattr(cv, meth)
+#
+#         print(method)
+#
+#         result = cv.matchTemplate(img, target, method)
+#         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+#         print(f"Method:{method} = {max_val}")
+#
+#         # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
+#         if method in [cv.TM_SQDIFF, cv.TM_SQDIFF_NORMED]:
+#             top_left = min_loc
+#         else:
+#             top_left = max_loc
+#         print(top_left)
+#         bottom_right = (top_left[0] + w, top_left[1] + h)
 
     # threshold = 0.9
     # if max_val >= threshold:
@@ -92,44 +92,44 @@ def tap_button_watch():
             continue
 
 
-def tap_button_watch3():
-    # сделать повторение т.к. кнопка watch может появиться не сразу
-
-    target = f"{TARGETS_DIR}watch.png"
-    img = "images/screenshots/specials.png"
-
-    # накладываем на скриншот маску с оттобранным цветом
-    # отбираем нужный цвет
-    button_color = [132, 179, 249]
-    low_color, height_color = create_low_and_height_color(button_color)
-    lower_color = np.array([*low_color])
-    upper_color = np.array([*height_color])
-    img = cv.imread(img)
-    target = cv.imread(target)
-    img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
-    mask = cv.inRange(img_hsv, lower_color, upper_color)
-    img_with_mask = cv.bitwise_and(img, img, mask=mask)
-    # img_with_mask = cv.imread(mask)
-    # result = cv.matchTemplate(img_with_mask, target, cv.TM_CCOEFF_NORMED)
-    method = cv.TM_CCORR_NORMED
-    result = cv.matchTemplate(img_with_mask, target, method)
-    min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
-
-    print(max_val)
-    threshold = 0.9
-    if max_val >= threshold:
-        # self.save_top_left_target_coords(max_loc)
-        logger.info("Target detected")
-    logger.error("Target not found")
-
-    # result = cv.bitwise_and(img, img, mask=mask)
-    # cv.imshow('Original', img)
-    # cv.imshow('Original2', img_hsv)
-    # cv.imshow('Mask', mask)
-    # cv.imshow('Result', result)
-    cv.imshow('Result', img_with_mask)
-    cv.waitKey(0)
-    cv.destroyAllWindows()
+# def tap_button_watch3():
+#     # сделать повторение т.к. кнопка watch может появиться не сразу
+#
+#     target = f"{TARGETS_DIR}watch.png"
+#     img = "images/screenshots/specials.png"
+#
+#     # накладываем на скриншот маску с оттобранным цветом
+#     # отбираем нужный цвет
+#     button_color = [132, 179, 249]
+#     low_color, height_color = create_low_and_height_color(button_color)
+#     lower_color = np.array([*low_color])
+#     upper_color = np.array([*height_color])
+#     img = cv.imread(img)
+#     target = cv.imread(target)
+#     img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+#     mask = cv.inRange(img_hsv, lower_color, upper_color)
+#     img_with_mask = cv.bitwise_and(img, img, mask=mask)
+#     # img_with_mask = cv.imread(mask)
+#     # result = cv.matchTemplate(img_with_mask, target, cv.TM_CCOEFF_NORMED)
+#     method = cv.TM_CCORR_NORMED
+#     result = cv.matchTemplate(img_with_mask, target, method)
+#     min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+#
+#     print(max_val)
+#     threshold = 0.9
+#     if max_val >= threshold:
+#         # self.save_top_left_target_coords(max_loc)
+#         logger.info("Target detected")
+#     logger.error("Target not found")
+#
+#     # result = cv.bitwise_and(img, img, mask=mask)
+#     # cv.imshow('Original', img)
+#     # cv.imshow('Original2', img_hsv)
+#     # cv.imshow('Mask', mask)
+#     # cv.imshow('Result', result)
+#     cv.imshow('Result', img_with_mask)
+#     cv.waitKey(0)
+#     cv.destroyAllWindows()
 
     # ищем кнопку в этом скриншоте
 

@@ -3,8 +3,17 @@ import os
 from settings import TARGETS_DIR
 
 
+# WORK_DIR = os.path.dirname(os.path.abspath(os.curdir))
+# TARGETS_DIR = os.path.join(WORK_DIR, "images", "targets")
+
+
 class Targets:
     loader = os.path.join(TARGETS_DIR, "loader.png")
+
+    button_ok = os.path.join(TARGETS_DIR, "ok.png")
+    button_get = os.path.join(TARGETS_DIR, "get.png")
+    button_repeat = os.path.join(TARGETS_DIR, "repeat.png")
+    button_back = os.path.join(TARGETS_DIR, "back.png")
 
     google_play_targets = [
         os.path.join(TARGETS_DIR, "google_play.png"),
@@ -12,48 +21,54 @@ class Targets:
         os.path.join(TARGETS_DIR, "google_play3.png"),
     ]
 
-    button_ok = os.path.join(TARGETS_DIR, "ok.png")
-    button_get = os.path.join(TARGETS_DIR, "get.png")
-    button_repeat = os.path.join(TARGETS_DIR, "repeat.png")
-    button_back = os.path.join(TARGETS_DIR, "back.png")
+    intro_targets = [
+        os.path.join(TARGETS_DIR, "yes.png"),
+        # должно быть первым чтобы не попасть в зацыкливание если появляется one-time offer
+        os.path.join(TARGETS_DIR, "close_first_windows.png"),
+        button_ok,
+    ]
 
     class MainMenu:
-        identifier = f"{TARGETS_DIR}to_battle.png"
-        menu_specials_icon = f"{TARGETS_DIR}basket.png"
-        menu_supply_center_icon = f"{TARGETS_DIR}supply_center_icon.png"
-        menu_black_market_icon = f"{TARGETS_DIR}black_market_menu_icon.png"
-        menu_workshop_icon = f"{TARGETS_DIR}workshop_level_1_icon.png"
+        MAIN_MENU_DIR = os.path.join(TARGETS_DIR, "menu", "main")
+
+        identifier = os.path.join(MAIN_MENU_DIR, "to_battle.png")
+        menu_specials_icon = os.path.join(MAIN_MENU_DIR, "basket.png")
+        menu_supply_center_icon = os.path.join(MAIN_MENU_DIR, "supply_center_icon.png")
+        menu_black_market_icon = os.path.join(MAIN_MENU_DIR, "black_market_menu_icon.png")
+        menu_workshop_icon = os.path.join(MAIN_MENU_DIR, "workshop_level_1_icon.png")
 
     class SpecialsMenu:
-        identifier = f"{TARGETS_DIR}specials.png"
-        # back_to_main_menu = f"{TARGETS_DIR}to_hangar.png"
-        button_watch = f"{TARGETS_DIR}watch.png"
+        SPECIALS_DIR = os.path.join(TARGETS_DIR, "menu", "specials")
+
+        identifier = os.path.join(SPECIALS_DIR, "specials.png")
+        # back_to_main_menu = os.path.join(TARGETS_DIR, to_hangar.png"
+        button_watch = os.path.join(SPECIALS_DIR, "watch.png")
 
     class SupplyCenterMenu:
-        identifier = f"{TARGETS_DIR}supply_center.png"
-        # back_to_main_menu = f"{TARGETS_DIR}back.png"
-        button_get_supplies = f"{TARGETS_DIR}get_supplies.png"
-        button_get_more = f"{TARGETS_DIR}get_more.png"
+        SUPPLY_CENTER_DIR = os.path.join(TARGETS_DIR, "menu", "supply_center")
+
+        identifier = os.path.join(SUPPLY_CENTER_DIR, "supply_center.png")
+        # back_to_main_menu = os.path.join(TARGETS_DIR, back.png"
+        button_get_supplies = os.path.join(SUPPLY_CENTER_DIR, "get_supplies.png")
+        button_get_more = os.path.join(SUPPLY_CENTER_DIR, "get_more.png")
         # open_ad  =   get more
 
     class BlackMarketMenu:
-        identifier = f"{TARGETS_DIR}black_market.png"
-        button_open_for_free = f"{TARGETS_DIR}open_for_free.png"
+        BLACK_MARKET_DIR = os.path.join(TARGETS_DIR, "menu", "black_market")
+
+        identifier = os.path.join(BLACK_MARKET_DIR, "black_market.png")
+        button_open_for_free = os.path.join(BLACK_MARKET_DIR, "open_for_free.png")
         # open_ad  =   open_for_free
-        bronze_chest_menu = f"{TARGETS_DIR}bronze_chest.png"
+        bronze_chest_menu = os.path.join(BLACK_MARKET_DIR, "bronze_chest.png")
 
     class WorkshopMenu:
-        identifier_level_1 = f"{TARGETS_DIR}robots.png"
-        identifier_level_2 = f"{TARGETS_DIR}workshop.png"
-        workshop_level_2_icon = f"{TARGETS_DIR}workshop_level_2_icon.png"
+        WORKSHOP_DIR = os.path.join(TARGETS_DIR, "menu", "workshop")
+
+        identifier_level_1 = os.path.join(WORKSHOP_DIR, "robots.png")
+        identifier_level_2 = os.path.join(WORKSHOP_DIR, "workshop.png")
+        workshop_level_2_icon = os.path.join(WORKSHOP_DIR, "workshop_level_2_icon.png")
 
     @staticmethod
     def for_closing_ads():
-        targets_list = os.listdir(f"{TARGETS_DIR}close_ads")
-        return [f"{TARGETS_DIR}close_ads/{target}" for target in [*targets_list]]
-
-    @staticmethod
-    def build_targets_list(*targets):
-        return [f"{TARGETS_DIR}{target}" for target in [*targets]]
-
-
+        targets = os.listdir(os.path.join(TARGETS_DIR, "close_ads"))
+        return [os.path.join(TARGETS_DIR, "close_ads", target) for target in [*targets]]
