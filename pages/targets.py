@@ -13,22 +13,23 @@ class Targets:
     button_ok = f"{TARGETS_DIR}ok.png"
     button_get = f"{TARGETS_DIR}get.png"
     button_repeat = f"{TARGETS_DIR}repeat.png"
+    button_back = f"{TARGETS_DIR}back.png"
 
     class MainMenu:
         identifier = f"{TARGETS_DIR}to_battle.png"
         menu_specials_icon = f"{TARGETS_DIR}basket.png"
         menu_supply_center_icon = f"{TARGETS_DIR}supply_center_icon.png"
-        black_market_menu = f"{TARGETS_DIR}black_market_menu_icon.png"
-        workshop_level_1_icon = f"{TARGETS_DIR}workshop_level_1_icon.png"
+        menu_black_market_icon = f"{TARGETS_DIR}black_market_menu_icon.png"
+        menu_workshop_icon = f"{TARGETS_DIR}workshop_level_1_icon.png"
 
     class MenuSpecials:
         identifier = f"{TARGETS_DIR}specials.png"
-        back_to_main_menu = f"{TARGETS_DIR}to_hangar.png"
+        # back_to_main_menu = f"{TARGETS_DIR}to_hangar.png"
         button_watch = f"{TARGETS_DIR}watch.png"
 
     class SupplyCenterMenu:
         identifier = f"{TARGETS_DIR}supply_center.png"
-        back_to_main_menu = f"{TARGETS_DIR}back.png"
+        # back_to_main_menu = f"{TARGETS_DIR}back.png"
         button_get_supplies = f"{TARGETS_DIR}get_supplies.png"
         button_get_more = f"{TARGETS_DIR}get_more.png"
         # open_ad  =   get more
@@ -37,14 +38,13 @@ class Targets:
         identifier = f"{TARGETS_DIR}black_market.png"
         button_open_for_free = f"{TARGETS_DIR}open_for_free.png"
         # open_ad  =   open_for_free
-        back_to_main_menu = f"{TARGETS_DIR}back.png"
         bronze_chest_menu = f"{TARGETS_DIR}bronze_chest.png"
 
     class MenuWorkshop:
         identifier_level_1 = f"{TARGETS_DIR}robots.png"
         identifier_level_2 = f"{TARGETS_DIR}workshop.png"
         workshop_level_2_icon = f"{TARGETS_DIR}workshop_level_2_icon.png"
-        back_to_main_menu = f"{TARGETS_DIR}back.png"
+
 
     @staticmethod
     def for_closing_ads():

@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 import time
 
 import cv2 as cv
@@ -25,6 +26,9 @@ def get_last_screenshot_path():
     logger.info(f"Берем скриншот: {last_screenshot_path}")
     return last_screenshot_path
 
+def stop():
+    logger.error("Остановка программы")
+    sys.exit()
 
 def create_low_and_height_color(button_color):
     low_color = []

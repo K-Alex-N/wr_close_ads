@@ -62,7 +62,7 @@ def open_back_market_menu():
     from pages.menu_black_market import is_black_market_menu
     # чтобы избавиться от кольцевых импортов то можно функцию прям в функцию передавать!!!
     take_screenshot()
-    target = Targets.MainMenu.black_market_menu
+    target = Targets.MainMenu.menu_black_market_icon
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
@@ -80,7 +80,7 @@ def open_menu_workshop_lev1():
 
     # чтобы избавиться от кольцевых импортов то можно функцию прям в функцию передавать!!!
     take_screenshot()
-    target = Targets.MainMenu.workshop_level_1_icon
+    target = Targets.MainMenu.menu_workshop_icon
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()

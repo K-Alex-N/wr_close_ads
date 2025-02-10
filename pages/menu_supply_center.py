@@ -1,6 +1,6 @@
 from app.utilites import ImageComparison, take_screenshot, wait
-from pages.base_page import is_target_on_screen, find_and_tap, watch_and_close_ad
-from pages.main_menu import open_menu_supply_center
+from pages.base_page import is_target_on_screen, find_and_tap, watch_and_close_ad, back_with_check
+from pages.main_menu import open_menu_supply_center, is_main_menu
 from pages.targets import Targets
 
 
@@ -9,18 +9,18 @@ def is_menu_supply_center():
     return is_target_on_screen(target)
 
 
-def back_to_main_menu():
-    target = Targets.SupplyCenterMenu.back_to_main_menu
-
-    for _ in range(2):
-        take_screenshot()
-        img_comp_obj = ImageComparison(target)
-        if img_comp_obj.is_target_on_image():
-            img_comp_obj.tap_on_target()
-
-        from pages.main_menu import is_main_menu
-        if is_main_menu():
-            return
+# def back_to_main_menu():
+#     target = Targets.SupplyCenterMenu.back_to_main_menu
+#
+#     for _ in range(2):
+#         take_screenshot()
+#         img_comp_obj = ImageComparison(target)
+#         if img_comp_obj.is_target_on_image():
+#             img_comp_obj.tap_on_target()
+#
+#         from pages.main_menu import is_main_menu
+#         if is_main_menu():
+#             return
 
 
 def get_first_free_supplies():
@@ -48,4 +48,4 @@ def watch_all_ads_in_supply_center_meny():
         tap_button_ad_in_supply_center()
         watch_and_close_ad(is_menu_supply_center)
         wait(5)
-    back_to_main_menu()
+    back_with_check(is_main_menu)

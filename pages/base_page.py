@@ -4,11 +4,13 @@ import time
 import cv2 as cv
 
 from app.adb import tap, tap_back
-from app.utilites import ImageComparison, take_screenshot, get_last_screenshot_path
+from app.utilites import ImageComparison, take_screenshot, get_last_screenshot_path, stop
 from log.log import logger
 from pages.menu_specials import is_menu_special
 from pages.targets import Targets
 
+
+# is_*_on_screen ____________________
 
 def is_target_on_screen(target, number_of_attempts=2):
     logger.info(f"Ищем: {target}")
@@ -24,6 +26,29 @@ def is_target_on_screen(target, number_of_attempts=2):
     logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
     return False
 
+
+def is_button_get_on_screen():
+    target = Targets.button_get
+    return is_target_on_screen(target)
+
+
+def is_button_repeat_on_screen():
+    target = Targets.button_repeat
+    return is_target_on_screen(target)
+
+
+def is_loader_on_screen():
+    target = Targets.loader
+    return is_target_on_screen(target)
+
+
+def is_google_play():
+    for target in Targets.google_play_targets:
+        if is_target_on_screen(target, number_of_attempts=1):
+            return True
+
+
+# find_and_tap ____________________
 
 def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of_attempts=2):
     target = cv.imread(target_path, 0)
@@ -54,26 +79,35 @@ def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of
     tap(x + w // 2, y + h // 2)
 
 
-def is_button_get_on_screen():
+def tap_button_get():
     target = Targets.button_get
-    return is_target_on_screen(target)
+    find_and_tap(target)
 
 
-def is_loader_on_screen():
-    target = Targets.loader
-    return is_target_on_screen(target)
+def tap_button_ok():
+    target = Targets.button_ok
+    find_and_tap(target)
 
 
-def stop():
-    logger.error("Остановка программы")
-    sys.exit()
+def tap_button_repeat():
+    target = Targets.button_repeat
+    find_and_tap(target)
 
 
-def is_google_play():
-    for target in Targets.google_play_targets:
-        if is_target_on_screen(target, number_of_attempts=1):
-            return True
+# Miscellaneous ____________________
 
+def back_with_check(check_func, to_take_new_screenshot=True):
+    if to_take_new_screenshot:
+        take_screenshot()
+
+    target = Targets.button_back
+    find_and_tap(target)
+
+    if check_func():
+        logger.info("Удачно вернулись в предыдущее меню")
+    else:
+        logger.info("Не получилось вернутся в предыдущее меню")
+        stop()
 
 def watch_and_close_ad(check_func):
     logger.info("Начался просмотр рекламы")
@@ -104,17 +138,3 @@ def watch_and_close_ad(check_func):
             logger.error("за 90 секунд не получилось закрыть рекламу")
             stop()
             break
-
-
-def tap_button_get():
-    target = Targets.button_get
-    find_and_tap(target)
-
-
-def tap_button_ok():
-    target = Targets.button_ok
-    find_and_tap(target)
-
-def tap_button_repeat():
-    target = Targets.button_repeat
-    find_and_tap(target)
