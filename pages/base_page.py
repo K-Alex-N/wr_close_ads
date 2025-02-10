@@ -89,6 +89,8 @@ def watch_and_close_ad(check_func):
                 img_comp_obj.tap_on_target()
                 break
 
+        # мб добавить проверку на RESUME и затем ждать 25 секунд
+
         if is_google_play():
             tap_back()
 
@@ -111,4 +113,8 @@ def tap_button_get():
 
 def tap_button_ok():
     target = Targets.button_ok
+    find_and_tap(target)
+
+def tap_button_repeat():
+    target = Targets.button_repeat
     find_and_tap(target)

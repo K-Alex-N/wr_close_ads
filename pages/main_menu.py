@@ -74,3 +74,19 @@ def open_back_market_menu():
             break
     else:
         logger.error(f"Не получилось открыть меню ")
+
+def open_menu_workshop_lev1():
+    from pages.menu_workshop import is_menu_workshop_lev1
+
+    # чтобы избавиться от кольцевых импортов то можно функцию прям в функцию передавать!!!
+    take_screenshot()
+    target = Targets.MainMenu.workshop_level_1_icon
+    img_comp_obj = ImageComparison(target)
+    if img_comp_obj.is_target_on_image():
+        img_comp_obj.tap_on_target()
+
+    for _ in range(3):
+        time.sleep(0.5)
+        take_screenshot()
+        if is_menu_workshop_lev1():
+            break
