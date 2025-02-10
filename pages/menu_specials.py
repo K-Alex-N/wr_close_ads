@@ -1,7 +1,7 @@
 import sys
 
 from app.adb import tap, swipe_left
-from app.utilites import take_screenshot, ImageComparison, get_coords_of_active_button
+from app.utilites import take_screenshot, get_coords_of_active_button
 from log.log import logger
 from pages.base_page import back_with_check
 

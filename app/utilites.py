@@ -6,7 +6,7 @@ import time
 import cv2 as cv
 import numpy as np
 
-from app.adb import tap
+from main.adb import tap
 from log.log import logger
 from pages.targets import Targets
 from settings import SCREENSHOTS_DIR, TARGETS_DIR
