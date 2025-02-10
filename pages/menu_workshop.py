@@ -9,12 +9,12 @@ from log.log import logger
 
 
 def is_menu_workshop_lev1():
-    target = Targets.MenuWorkshop.identifier_level_1
+    target = Targets.WorkshopMenu.identifier_level_1
     return is_target_on_screen(target)
 
 
 def is_menu_workshop_lev2():
-    target = Targets.MenuWorkshop.identifier_level_2
+    target = Targets.WorkshopMenu.identifier_level_2
     return is_target_on_screen(target)
 
 

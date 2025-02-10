@@ -25,8 +25,9 @@ def is_menu_supply_center():
 
 def get_first_free_supplies():
     target = Targets.SupplyCenterMenu.button_get_supplies
-    find_and_tap(target)
-    wait(10)  # ожидание пока рулетка крутится
+    if is_target_on_screen(target):
+        find_and_tap(target)
+        wait(10)  # ожидание пока рулетка крутится
 
 
 def tap_button_ad_in_supply_center():
@@ -47,5 +48,5 @@ def watch_all_ads_in_supply_center_meny():
             break
         tap_button_ad_in_supply_center()
         watch_and_close_ad(is_menu_supply_center)
-        wait(5)
+        wait(5) # ожидание пока рулетка крутится
     back_with_check(is_main_menu)

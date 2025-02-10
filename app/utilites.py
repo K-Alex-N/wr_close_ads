@@ -77,7 +77,7 @@ def tap_button_watch2():
 
 
 def tap_button_watch():
-    target = Targets.MenuSpecials.button_watch
+    target = Targets.SpecialsMenu.button_watch
     method = 1  # TM_SQDIFF_NORMED
     # for method in [1, 5]:
     # img = "images/screenshots/specials.png"
@@ -192,7 +192,7 @@ def get_coords_of_active_button():
     """"
     на текущем экране ищем активные кнопки
     """
-    target = Targets.MenuSpecials.button_watch
+    target = Targets.SpecialsMenu.button_watch
     # img_color = cv.imread('images/screenshots/ad.JPG')
     img_color = cv.imread(get_last_screenshot_path())
     img_gray = cv.cvtColor(img_color, cv.COLOR_BGR2GRAY)

@@ -1,7 +1,6 @@
 import time
 
 from app.adb import start_app, turn_off_media_sound, start_adb_connection
-from app.app import close_intro
 from app.utilites import wait
 
 from log.log import logger

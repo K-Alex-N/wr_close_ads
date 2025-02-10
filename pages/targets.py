@@ -4,16 +4,18 @@ from settings import TARGETS_DIR
 
 
 class Targets:
-    loader = f"{TARGETS_DIR}loader.png"
+    loader = os.path.join(TARGETS_DIR, "loader.png")
+
     google_play_targets = [
-        f"{TARGETS_DIR}google_play.png",
-        f"{TARGETS_DIR}google_play2.png",
-        f"{TARGETS_DIR}google_play3.png",
+        os.path.join(TARGETS_DIR, "google_play.png"),
+        os.path.join(TARGETS_DIR, "google_play2.png"),
+        os.path.join(TARGETS_DIR, "google_play3.png"),
     ]
-    button_ok = f"{TARGETS_DIR}ok.png"
-    button_get = f"{TARGETS_DIR}get.png"
-    button_repeat = f"{TARGETS_DIR}repeat.png"
-    button_back = f"{TARGETS_DIR}back.png"
+
+    button_ok = os.path.join(TARGETS_DIR, "ok.png")
+    button_get = os.path.join(TARGETS_DIR, "get.png")
+    button_repeat = os.path.join(TARGETS_DIR, "repeat.png")
+    button_back = os.path.join(TARGETS_DIR, "back.png")
 
     class MainMenu:
         identifier = f"{TARGETS_DIR}to_battle.png"
@@ -22,7 +24,7 @@ class Targets:
         menu_black_market_icon = f"{TARGETS_DIR}black_market_menu_icon.png"
         menu_workshop_icon = f"{TARGETS_DIR}workshop_level_1_icon.png"
 
-    class MenuSpecials:
+    class SpecialsMenu:
         identifier = f"{TARGETS_DIR}specials.png"
         # back_to_main_menu = f"{TARGETS_DIR}to_hangar.png"
         button_watch = f"{TARGETS_DIR}watch.png"
@@ -40,11 +42,10 @@ class Targets:
         # open_ad  =   open_for_free
         bronze_chest_menu = f"{TARGETS_DIR}bronze_chest.png"
 
-    class MenuWorkshop:
+    class WorkshopMenu:
         identifier_level_1 = f"{TARGETS_DIR}robots.png"
         identifier_level_2 = f"{TARGETS_DIR}workshop.png"
         workshop_level_2_icon = f"{TARGETS_DIR}workshop_level_2_icon.png"
-
 
     @staticmethod
     def for_closing_ads():
@@ -54,3 +55,5 @@ class Targets:
     @staticmethod
     def build_targets_list(*targets):
         return [f"{TARGETS_DIR}{target}" for target in [*targets]]
+
+

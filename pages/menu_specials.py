@@ -11,7 +11,7 @@ from pages.targets import Targets
 
 def is_menu_special():
     from pages.base_page import is_target_on_screen
-    target = Targets.MenuSpecials.identifier
+    target = Targets.SpecialsMenu.identifier
     return is_target_on_screen(target)
 
 
