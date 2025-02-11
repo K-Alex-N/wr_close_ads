@@ -15,13 +15,13 @@ from settings import SCREENSHOTS_DIR
 def take_screenshot():
     # Можно ли это как то под общую обертку (как в модуле adb) запихнуть?
     logger.info("Получаем скриншот")
-    with open(f"{SCREENSHOTS_DIR}{time.time()}.png", "wb") as file:
+    screenshot_name = os.path.join(SCREENSHOTS_DIR, f"{time.time()}.png")
+    with open(screenshot_name, "wb") as file:
         subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
 
 def get_last_screenshot_path():
-    files = os.listdir(SCREENSHOTS_DIR)
-    files = [f"{SCREENSHOTS_DIR}{file}" for file in files]
+    files = [os.path.join(SCREENSHOTS_DIR, file) for file in os.listdir(SCREENSHOTS_DIR)]
     last_screenshot_path = max(files, key=os.path.getctime)
     logger.info(f"Берем скриншот: {last_screenshot_path}")
     return last_screenshot_path

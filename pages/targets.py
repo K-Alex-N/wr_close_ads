@@ -13,7 +13,11 @@ class Targets:
     button_ok = os.path.join(TARGETS_DIR, "ok.png")
     button_get = os.path.join(TARGETS_DIR, "get.png")
     button_repeat = os.path.join(TARGETS_DIR, "repeat.png")
-    button_back = os.path.join(TARGETS_DIR, "back.png")
+
+    back_buttons = [
+        os.path.join(TARGETS_DIR, "back.png"),
+        os.path.join(TARGETS_DIR, "to_hangar.png"),
+    ]
 
     google_play_targets = [
         os.path.join(TARGETS_DIR, "google_play.png"),
@@ -22,8 +26,7 @@ class Targets:
     ]
 
     intro_targets = [
-        os.path.join(TARGETS_DIR, "yes.png"),
-        # должно быть первым чтобы не попасть в зацыкливание если появляется one-time offer
+        os.path.join(TARGETS_DIR, "yes.png"), # должно быть первым чтобы не попасть в зацыкливание при one-time offer
         os.path.join(TARGETS_DIR, "close_first_windows.png"),
         button_ok,
     ]

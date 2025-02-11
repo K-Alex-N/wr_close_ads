@@ -39,7 +39,7 @@ def is_button_repeat_on_screen():
 
 def is_loader_on_screen():
     target = Targets.loader
-    return is_target_on_screen(target)
+    return is_target_on_screen(target, number_of_attempts=1)
 
 
 def is_google_play():
@@ -100,8 +100,11 @@ def back_with_check(check_func, to_take_new_screenshot=True):
     if to_take_new_screenshot:
         take_screenshot()
 
-    target = Targets.button_back
-    find_and_tap(target)
+    targets = Targets.back_buttons
+    for target in targets:
+        if not is_target_on_screen(target):
+            continue
+        find_and_tap(target)
 
     if check_func():
         logger.info("Удачно вернулись в предыдущее меню")
@@ -124,6 +127,7 @@ def watch_and_close_ad(check_func):
                 break
 
         # мб добавить проверку на RESUME и затем ждать 25 секунд
+        # можно ли системную кнопку back назать если RESUME появилось
 
         if is_google_play():
             tap_back()

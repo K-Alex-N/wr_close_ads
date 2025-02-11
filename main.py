@@ -5,6 +5,7 @@ from app.utilites import wait
 
 from log.log import logger
 from pages.base_page import find_and_tap, is_google_play
+from pages.intro import close_intro
 from pages.menu_black_market import watch_ad_in_black_market_menu
 from pages.menu_specials import watch_all_ads_in_menu_specials
 from pages.menu_supply_center import watch_all_ads_in_supply_center_meny
@@ -13,17 +14,19 @@ from settings import *
 
 # start_adb_connection()
 
-print(Targets.for_closing_ads())
 
+
+# print(Targets.for_closing_ads())
+# adb pair 192.168.1.46:33259
 # start_app()
 # turn_off_media_sound()
 # wait(15)
 # close_intro()
-# watch_ad_in_black_market_menu()
-# watch_all_ads_in_menu_specials()
-# watch_ad_in_black_market_menu() # добавляем снова т.к. через 30 секунд он восстанавливается
-# watch_all_ads_in_supply_center_meny()
-# watch_ad_in_black_market_menu() # добавляем снова т.к. через 30 секунд он восстанавливается
+watch_ad_in_black_market_menu()
+watch_all_ads_in_menu_specials()
+watch_ad_in_black_market_menu() # добавляем снова т.к. через 30 секунд он восстанавливается
+watch_all_ads_in_supply_center_meny()
+watch_ad_in_black_market_menu() # добавляем снова т.к. через 30 секунд он восстанавливается
 # set_max_media_sound()
 logger.info(">>>>>>>>>>>>УСПЕШНО ОКОНЧЕНО<<<<<<<<<<<<")
 

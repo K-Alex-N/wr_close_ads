@@ -20,10 +20,18 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
     return result
 
 
+# def start_adb_connection():
+#     logger.info("Запуск соединения с телефоном")
+#     execute("adb tcpip 5555")
+#     execute("adb connect 192.168.1.46:5555")
+
 def start_adb_connection():
-    logger.info("Запуск соединения с телефоном")
-    execute("adb tcpip 5555")
-    execute("adb connect 192.168.1.46:5555")
+    print("Open on your smartphone > Wireless debugging > Pair device with pairing code")
+    port = input("Enter port number")
+    addr = f"192.168.**:{port}" #todo дописать ip адресс
+    execute(f"adb pair {addr}")
+    pwd = input("Enter 6 digits password")
+    execute(f"{pwd}")
 
 def set_media_sound_volume(volume: int):
     execute(f"adb shell cmd media_session volume --show --stream 3 --set {volume}")
