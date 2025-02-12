@@ -5,6 +5,8 @@
 import subprocess
 from typing import Union
 
+from PIL.ImageChops import offset
+
 from log.log import logger
 
 
@@ -28,10 +30,33 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 def start_adb_connection():
     print("Open on your smartphone > Wireless debugging > Pair device with pairing code")
     port = input("Enter port number")
+    print(port)
     addr = f"192.168.1.46:{port}"
-    execute(f"adb pair {addr}")
+    print(addr)
+    msg = f"adb pair {addr}"
+    # execute(f"adb pair {addr}")
+    print(msg)
+    execute(msg)
     pwd = input("Enter 6 digits password")
-    execute(f"{pwd}")
+    print(pwd)
+    execute(pwd)
+
+
+def start_app():
+    logger.info("Запуск игры")
+    execute("adb shell am start -n com.pixonic.wwr/com.unity3d.player.UnityPlayerActivity")
+
+
+def tap(x, y):
+    logger.info(f"Нажимаем на {x} {y}")
+    execute(f"adb shell input tap {x} {y}")
+
+
+def tap_system_button_back():
+    execute("adb shell input keyevent KEYCODE_BACK")
+
+
+# sound ---------------
 
 def set_media_sound_volume(volume: int):
     execute(f"adb shell cmd media_session volume --show --stream 3 --set {volume}")
@@ -47,25 +72,14 @@ def set_max_media_sound():
     set_media_sound_volume(15)
 
 
-def tap(x, y):
-    logger.info(f"Нажимаем на {x} {y}")
-    execute(f"adb shell input tap {x} {y}")
-
-
-def start_app():
-    logger.info("Запуск игры")
-    execute("adb shell am start -n com.pixonic.wwr/com.unity3d.player.UnityPlayerActivity")
-
-
-def tap_back():
-    execute("adb shell input keyevent KEYCODE_BACK")
-
+# swipe ---------------
 
 def swipe(x1, y1, x2, y2, duration=500):
     execute(f"adb shell input swipe {x1} {y1} {x2} {y2} {duration}")
 
 
-def swipe_left(percentage=None, pixels=None):
+def swipe_left():
+    # offset
     x1, x2 = 1500, 1000
     y1 = y2 = 500
     swipe(x1, y1, x2, y2)

@@ -28,17 +28,9 @@ from settings import *
 start_all_works_in_workshop()
 
 # set_max_media_sound()
-logger.info(">>>>>>>>>>>>УСПЕШНО ОКОНЧЕНО<<<<<<<<<<<<")
+logger.info(">>>УСПЕШНО ОКОНЧЕНО<<<")
 
 
-# target = Targets.
-# find_and_tap(target, img_path)
-# find_and_tap(target)
-
-
-# tap_button_watch()
-
-# tap_button_watch2()  # разные методы потестить
 
 # start_time = time.time()
 # for _ in range(100):

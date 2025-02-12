@@ -3,7 +3,7 @@ import time
 
 import cv2 as cv
 
-from app.adb import tap, tap_back
+from app.adb import tap, tap_system_button_back
 from app.utilites import ImageComparison, take_screenshot, get_last_screenshot_path, stop, wait
 from log.log import logger
 from pages.menu_specials import is_menu_special
@@ -150,6 +150,7 @@ def back_and_check(check_func, to_take_new_screenshot=False):
         stop()
 
 
+# МБ перенести это в utils
 def watch_and_close_ad(check_func):
     logger.info("Начался просмотр рекламы\n")
     targets = Targets.for_closing_ads()
@@ -179,7 +180,7 @@ def watch_and_close_ad(check_func):
             break
 
         if is_google_play():
-            tap_back()
+            tap_system_button_back()
             wait(1)
 
     else:
