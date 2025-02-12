@@ -1,7 +1,7 @@
 import sys
 
 from app.adb import tap, swipe_left
-from app.utilites import take_screenshot, get_coords_of_active_button
+from app.utilites import take_screenshot, get_coords_of_active_button, wait
 from log.log import logger
 
 
@@ -39,15 +39,17 @@ def try_get_button_watch_coords():
     # собрать все номера (а точнее номер 2 и 3)
     # если обнаружили 3 то ставим 3 цикла если 2 то два цикла
 
+    from pages.base_page import back_and_check
+
     while True:
         coords = try_get_button_watch_coords_on_current_page()
         if coords:
             return coords
 
         # back_to_main_menu()
-        back_with_check(is_main_menu)
+        back_and_check(is_main_menu)
         if not is_menu_specials_icon_on_screen():
-            return None
+            return None # если иконки нет, то вся реклама просмотренна
         open_menu_special()
 
     # Возможно определение активной страницы по цвету кнопки
@@ -67,17 +69,18 @@ def try_get_button_watch_coords_on_current_page():
         coords = get_coords_of_active_button()
         if coords:
             return coords
-        swipe_left()
+        swipe_left() # прокручиваем влево и повторяем поиск
 
-    logger.info("Кнопки watch не найдено на страницу")
+    logger.info("Кнопка watch не найдена на странице")
     return None
 
 # main function
 def watch_all_ads_in_menu_specials():
-    from pages.base_page import back_with_check
+    from pages.base_page import back_and_check
     from pages.base_page import tap_button_ok, tap_button_get
     from pages.base_page import is_button_get_on_screen
-    from pages.base_page import watch_and_close_ad
+    from pages.base_page import watch_and_close_ad, tap_button_ok_and_check
+    from pages.base_page import tap_button_get_and_check, is_button_ok_on_screen
 
     open_menu_special()
 
@@ -90,8 +93,11 @@ def watch_all_ads_in_menu_specials():
         watch_and_close_ad(is_menu_special)
         if not is_button_get_on_screen():  # иногда после рекламы нет вознаграждения т.к. нужно посмотреть несколько реклам
             continue
-        tap_button_get()
-        take_screenshot()
-        tap_button_ok()
+        tap_button_get_and_check(is_button_ok_on_screen)
+        # tap_button_get()
+        # wait(1)
+        # take_screenshot()
+        tap_button_ok_and_check(is_menu_special)
+        # tap_button_ok()
 
-    back_with_check(is_main_menu)
+    back_and_check(is_main_menu)

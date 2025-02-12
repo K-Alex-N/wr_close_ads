@@ -2,7 +2,7 @@ import time
 
 from app.utilites import take_screenshot, ImageComparison
 from pages.base_page import is_target_on_screen, tap_button_get, is_button_get_on_screen, find_and_tap, stop, \
-    back_with_check, is_button_repeat_on_screen, tap_button_repeat
+    back_and_check, is_button_repeat_on_screen, tap_button_repeat
 from pages.main_menu import open_menu_workshop_lev1, is_main_menu
 from pages.targets import Targets
 from log.log import logger
@@ -21,7 +21,7 @@ def is_menu_workshop_lev2():
 def open_menu_workshop_lev2():
     # чтобы избавиться от кольцевых импортов то можно функцию прям в функцию передавать!!!
     take_screenshot()
-    target = Targets.MainMenu.menu_workshop_icon
+    target = Targets.WorkshopMenu.workshop_level_2_icon
     img_comp_obj = ImageComparison(target)
     if img_comp_obj.is_target_on_image():
         img_comp_obj.tap_on_target()
@@ -76,5 +76,5 @@ def start_all_works_in_workshop():
     open_menu_workshop_lev2()
     tap_all_get_buttons()
     tap_all_repeat_buttons()
-    back_with_check(is_menu_workshop_lev1)
-    back_with_check(is_main_menu)
+    back_and_check(is_menu_workshop_lev1)
+    back_and_check(is_main_menu)

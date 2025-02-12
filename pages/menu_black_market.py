@@ -1,6 +1,6 @@
 from app.adb import tap
 from app.utilites import ImageComparison, take_screenshot, wait
-from pages.base_page import is_target_on_screen, find_and_tap, watch_and_close_ad, back_with_check
+from pages.base_page import is_target_on_screen, find_and_tap, watch_and_close_ad, back_and_check
 from pages.main_menu import open_back_market_menu, is_main_menu
 from pages.targets import Targets
 
@@ -40,6 +40,10 @@ def is_bronze_chest_menu():
 #         if is_main_menu():
 #             return
 
+def is_button_open_for_free():
+    target = Targets.BlackMarketMenu.button_open_for_free
+    return is_target_on_screen(target)
+
 def tap_button_open_for_free():
     target = Targets.BlackMarketMenu.button_open_for_free
     find_and_tap(target)
@@ -47,9 +51,10 @@ def tap_button_open_for_free():
 
 def watch_ad_in_black_market_menu():
     open_back_market_menu()
-    tap_button_open_for_free()
-    watch_and_close_ad(is_bronze_chest_menu)
-    tap(100, 100) # нажатие на экран для ускорения анимации
-    wait(3)  # ждем пока анимация получения подарка закончится
-    back_with_check(is_black_market_menu)
-    back_with_check(is_main_menu)
+    if is_button_open_for_free():
+        tap_button_open_for_free()
+        watch_and_close_ad(is_bronze_chest_menu)
+        tap(300, 300) # нажатие на экран для ускорения анимации
+        wait(5)  # ждем пока анимация закончится
+        back_and_check(is_black_market_menu, to_take_new_screenshot=True)
+    back_and_check(is_main_menu)

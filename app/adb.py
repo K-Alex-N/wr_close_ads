@@ -28,7 +28,7 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
 def start_adb_connection():
     print("Open on your smartphone > Wireless debugging > Pair device with pairing code")
     port = input("Enter port number")
-    addr = f"192.168.**:{port}" #todo дописать ip адресс
+    addr = f"192.168.1.46:{port}"
     execute(f"adb pair {addr}")
     pwd = input("Enter 6 digits password")
     execute(f"{pwd}")

@@ -19,7 +19,7 @@ def is_main_menu():
 
 def is_menu_specials_icon_on_screen():
     from pages.base_page import is_target_on_screen
-    take_screenshot()
+    # take_screenshot()
     target = Targets.MainMenu.menu_specials_icon
     if is_target_on_screen(target):
         return True
@@ -71,6 +71,7 @@ def open_back_market_menu():
         time.sleep(0.5)
         take_screenshot()
         if is_black_market_menu():
+            logger.info(f"Зашли в black market меню\n")
             break
     else:
         logger.error(f"Не получилось открыть меню ")
