@@ -6,8 +6,9 @@ import time
 import cv2 as cv
 import numpy as np
 
-from app.adb import tap
+from app.adb import tap, tap_system_button_back
 from log.log import logger
+
 from pages.targets import Targets
 from settings import SCREENSHOTS_DIR
 
@@ -26,9 +27,11 @@ def get_last_screenshot_path():
     logger.info(f"Берем скриншот: {last_screenshot_path}")
     return last_screenshot_path
 
+
 def stop():
     logger.error("Остановка программы")
     sys.exit()
+
 
 def create_low_and_height_color(button_color):
     low_color = []
@@ -68,12 +71,12 @@ def create_low_and_height_color(button_color):
 #         print(top_left)
 #         bottom_right = (top_left[0] + w, top_left[1] + h)
 
-    # threshold = 0.9
-    # if max_val >= threshold:
-    #     logger.info("Target detected")
-    #     return True
-    # logger.error("Target not found")
-    # return False
+# threshold = 0.9
+# if max_val >= threshold:
+#     logger.info("Target detected")
+#     return True
+# logger.error("Target not found")
+# return False
 
 
 def tap_button_watch():
@@ -131,47 +134,47 @@ def tap_button_watch():
 #     cv.waitKey(0)
 #     cv.destroyAllWindows()
 
-    # ищем кнопку в этом скриншоте
+# ищем кнопку в этом скриншоте
 
-    # take_screenshot()
-    # button_color = [132, 179, 249]
-    # low_color, height_color = create_low_and_height_color(button_color)
-    # lower_color = np.array([*low_color])
-    # upper_color = np.array([*height_color])
-    # img = cv.imread(img)
-    # img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
+# take_screenshot()
+# button_color = [132, 179, 249]
+# low_color, height_color = create_low_and_height_color(button_color)
+# lower_color = np.array([*low_color])
+# upper_color = np.array([*height_color])
+# img = cv.imread(img)
+# img_hsv = cv.cvtColor(img, cv.COLOR_BGR2HSV)
 
-    # mask = cv.inRange(img_hsv, lower_color, upper_color)
-    # result = cv.bitwise_and(img, img, mask=mask)
+# mask = cv.inRange(img_hsv, lower_color, upper_color)
+# result = cv.bitwise_and(img, img, mask=mask)
 
-    # Отображение результата
-    # cv.imshow('Original', img)
-    # cv.imshow('Mask', mask)
-    # cv.imshow('Result', result)
-    # cv.waitKey(0)
-    # cv.destroyAllWindows()
-    #
-    # result = cv.matchTemplate(img, target, cv.TM_CCOEFF_NORMED)
-    # # cv2.TM_SQDIFF
-    # # cv2.TM_CCORR_NORMED
-    #
-    # min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
-    #
-    # # print(max_val)
-    # threshold = 0.9
-    # if max_val >= threshold:
-    #     # self.save_top_left_target_coords(max_loc)
-    #     logger.info("Target detected")
-    #     return True
-    # logger.error("Target not found")
-    # return False
+# Отображение результата
+# cv.imshow('Original', img)
+# cv.imshow('Mask', mask)
+# cv.imshow('Result', result)
+# cv.waitKey(0)
+# cv.destroyAllWindows()
+#
+# result = cv.matchTemplate(img, target, cv.TM_CCOEFF_NORMED)
+# # cv2.TM_SQDIFF
+# # cv2.TM_CCORR_NORMED
+#
+# min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
+#
+# # print(max_val)
+# threshold = 0.9
+# if max_val >= threshold:
+#     # self.save_top_left_target_coords(max_loc)
+#     logger.info("Target detected")
+#     return True
+# logger.error("Target not found")
+# return False
 
-    # if img:
-    #     img_comp_obj = ImageComparison(target, img)
-    # else:
-    #     img_comp_obj = ImageComparison(target)
-    # if img_comp_obj.is_target_on_image():
-    #     img_comp_obj.tap_on_target()
+# if img:
+#     img_comp_obj = ImageComparison(target, img)
+# else:
+#     img_comp_obj = ImageComparison(target)
+# if img_comp_obj.is_target_on_image():
+#     img_comp_obj.tap_on_target()
 
 
 def wait(sec: int):
@@ -219,6 +222,44 @@ def get_coords_of_active_button():
         if is_color_similar(pixel_color, first_pixel_target_color):
             return x + w, y + h
     return None
+
+
+def watch_and_close_ad(check_func):
+    from pages.base_page import is_google_play_on_screen
+
+    wait(2)  # wait for ad start
+    logger.info("Начался просмотр рекламы\n")
+    targets = Targets.for_closing_ads()
+    start_time = time.time()
+    while time.time() - start_time < 90:
+        take_screenshot()
+        for target in targets:
+            # if is_target_on_screen(targets, threshold=0.8):
+
+            img_comp_obj = ImageComparison(target, threshold=0.8)
+            if img_comp_obj.is_target_on_image():
+                img_comp_obj.tap_on_target()
+                wait(2)
+                take_screenshot()
+                # нужно перезапустить while с начала + скриншот получить!
+                break
+        # else: # если прошли по всем таршетам и не нашли как заурыть рекламу то повторяем, пока не кончится время
+        #     continue  # todo с помощью такой схемы попадаем в цикл
+
+        # мб добавить проверку на RESUME и затем ждать 25 секунд
+        # можно ли системную кнопку back назать если RESUME появилось
+
+        if check_func():
+            logger.info("Реклама закончилась. Вернулись в меню.")
+            break
+
+        if is_google_play_on_screen():
+            tap_system_button_back()
+            wait(1)
+
+    else:
+        logger.error("За 90 секунд не получилось закрыть рекламу")
+        stop()
 
 
 class ImageComparison:

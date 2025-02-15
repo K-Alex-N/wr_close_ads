@@ -1,9 +1,6 @@
-import sys
-
 from app.adb import tap, swipe_left
-from app.utilites import take_screenshot, get_coords_of_active_button, wait
+from app.utils import take_screenshot, get_coords_of_active_button
 from log.log import logger
-
 
 from pages.main_menu import open_menu_special, is_menu_specials_icon_on_screen, is_main_menu
 from pages.targets import Targets
@@ -13,23 +10,6 @@ def is_menu_special():
     from pages.base_page import is_target_on_screen
     target = Targets.SpecialsMenu.identifier
     return is_target_on_screen(target)
-
-
-
-# def back_to_main_menu():
-#     for _ in range(2):
-#         take_screenshot()
-#         target = Targets.MenuSpecials.back_to_main_menu
-#         img_comp_obj = ImageComparison(target)
-#         if img_comp_obj.is_target_on_image():
-#             img_comp_obj.tap_on_target()
-#
-#         from pages.main_menu import is_main_menu
-#         if is_main_menu():
-#             return
-#
-#     logger.error("Не получилось вернуться в главное меню")
-#     sys.exit()
 
 
 def try_get_button_watch_coords():
@@ -46,10 +26,9 @@ def try_get_button_watch_coords():
         if coords:
             return coords
 
-        # back_to_main_menu()
         back_and_check(is_main_menu)
         if not is_menu_specials_icon_on_screen():
-            return None # если иконки нет, то вся реклама просмотренна
+            return None  # если иконки нет, то вся реклама просмотренна
         open_menu_special()
 
     # Возможно определение активной страницы по цвету кнопки
@@ -69,15 +48,15 @@ def try_get_button_watch_coords_on_current_page():
         coords = get_coords_of_active_button()
         if coords:
             return coords
-        swipe_left() # прокручиваем влево и повторяем поиск
+        swipe_left()  # прокручиваем влево и повторяем поиск
 
     logger.info("Кнопка watch не найдена на странице")
     return None
 
+
 # main function
 def watch_all_ads_in_menu_specials():
     from pages.base_page import back_and_check
-    from pages.base_page import tap_button_ok, tap_button_get
     from pages.base_page import is_button_get_on_screen
     from pages.base_page import watch_and_close_ad, tap_button_ok_and_check
     from pages.base_page import tap_button_get_and_check, is_button_ok_on_screen
@@ -89,15 +68,10 @@ def watch_all_ads_in_menu_specials():
         if coords is None:
             break  # all ads are watched. Now we are in main menu
         tap(*coords)
-        # wait(1) # wait for
         watch_and_close_ad(is_menu_special)
         if not is_button_get_on_screen():  # иногда после рекламы нет вознаграждения т.к. нужно посмотреть несколько реклам
             continue
         tap_button_get_and_check(is_button_ok_on_screen)
-        # tap_button_get()
-        # wait(1)
-        # take_screenshot()
         tap_button_ok_and_check(is_menu_special)
-        # tap_button_ok()
 
     back_and_check(is_main_menu)

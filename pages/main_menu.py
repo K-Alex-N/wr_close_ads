@@ -1,6 +1,6 @@
 import time
 
-from app.utilites import ImageComparison, take_screenshot
+from app.utils import ImageComparison, take_screenshot
 from log.log import logger
 
 

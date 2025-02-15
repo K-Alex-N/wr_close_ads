@@ -1,4 +1,4 @@
-from app.utilites import wait, take_screenshot, stop, ImageComparison
+from app.utils import wait, take_screenshot, stop, ImageComparison
 from log.log import logger
 from pages.base_page import is_loader_on_screen
 from pages.main_menu import is_main_menu
@@ -35,12 +35,8 @@ def close_intro():
                     break
 
             if is_main_menu():
-                logger.info(f"Интро закончилось. \nЗашли в главное меню")
+                logger.info(f"Интро закончилось. Зашли в главное меню\n")
                 return
-
-            # # щелканье в то место где должен быть крестик только в том случае если не не шли главное меню и не нашли крести. А может быть вооюще убрать
-            # # пробуем просто нажать в то место где крестик
-            # tap(2356, 56)
 
         else:
             logger.info(f"Не получилось закрыть интро номер {i + 1}")

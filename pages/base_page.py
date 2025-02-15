@@ -1,61 +1,56 @@
-import sys
-import time
-
 import cv2 as cv
 
-from app.adb import tap, tap_system_button_back
-from app.utilites import ImageComparison, take_screenshot, get_last_screenshot_path, stop, wait
+from app.adb import tap
+from app.utils import ImageComparison, take_screenshot, get_last_screenshot_path, stop, wait
 from log.log import logger
-from pages.menu_specials import is_menu_special
 from pages.targets import Targets
 
 
-# is_*_on_screen ____________________
+# is_*_on_screen
 
 def is_target_on_screen(target, number_of_attempts=1):
-    # logger.info(f"Ищем: {target}")
-
     # todo переписать эту функцию без использования класса ImageComparison
-    if number_of_attempts == 1:
+
+    for _ in range(number_of_attempts):
         img_comp_obj = ImageComparison(target)
         if img_comp_obj.is_target_on_image():
             return True
+
+        if number_of_attempts > 1:
+            take_screenshot()
+
     else:
-        for _ in range(number_of_attempts):
-            img_comp_obj = ImageComparison(target)
-            if img_comp_obj.is_target_on_image():
-                return True
-            take_screenshot() # todo это должно быть только если несколько раз повторяем
-
         logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
-    return False
+        return False
 
 
-def is_button_get_on_screen():
+def is_button_get_on_screen() -> bool:
     target = Targets.button_get
     return is_target_on_screen(target)
 
-def is_button_ok_on_screen():
+
+def is_button_ok_on_screen() -> bool:
     target = Targets.button_ok
     return is_target_on_screen(target)
 
-def is_button_repeat_on_screen():
+
+def is_button_repeat_on_screen() -> bool:
     target = Targets.button_repeat
     return is_target_on_screen(target)
 
 
-def is_loader_on_screen():
+def is_loader_on_screen() -> bool:
     target = Targets.loader
     return is_target_on_screen(target, number_of_attempts=1)
 
 
-def is_google_play():
+def is_google_play_on_screen() -> bool or None:
     for target in Targets.google_play_targets:
-        if is_target_on_screen(target, number_of_attempts=1):
+        if is_target_on_screen(target):
             return True
 
 
-# find_and_tap ____________________
+# find_and_tap
 
 def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of_attempts=1):
     target = cv.imread(target_path, 0)
@@ -100,7 +95,8 @@ def tap_button_repeat():
     target = Targets.button_repeat
     find_and_tap(target)
 
-# find, tap and check ____________________
+
+# find, tap and check
 
 def find_tap_and_check(target, check_func):
     find_and_tap(target)
@@ -111,14 +107,17 @@ def find_tap_and_check(target, check_func):
         if check_func:
             return True
 
+
 def tap_button_get_and_check(check_func):
-    tap_button_get()
-    wait(1)
-    for attempt in range(5):
-        logger.info(f"{attempt} попытка")
-        take_screenshot()
-        if check_func:
-            return True
+    # tap_button_get()
+    # wait(1)
+    # for attempt in range(5):
+    #     logger.info(f"{attempt} попытка")
+    #     take_screenshot()
+    #     if check_func:
+    #         return True
+    target = Targets.button_get
+    return find_tap_and_check(target, check_func)
 
 def tap_button_ok_and_check(check_func):
     tap_button_ok()
@@ -129,7 +128,8 @@ def tap_button_ok_and_check(check_func):
         if check_func:
             return True
 
-# Miscellaneous ____________________
+
+# miscellaneous
 
 def back_and_check(check_func, to_take_new_screenshot=False):
     if to_take_new_screenshot:
@@ -146,43 +146,5 @@ def back_and_check(check_func, to_take_new_screenshot=False):
     if check_func():
         logger.info("Удачно вернулись в предыдущее меню\n")
     else:
-        logger.info("Не получилось вернутся в предыдущее меню\n")
-        stop()
-
-
-# МБ перенести это в utils
-def watch_and_close_ad(check_func):
-    logger.info("Начался просмотр рекламы\n")
-    targets = Targets.for_closing_ads()
-    start_time = time.time()
-    while time.time() - start_time < 90:
-        take_screenshot()
-        for target in targets:
-            # if is_target_on_screen(targets, threshold=0.8):
-
-            img_comp_obj = ImageComparison(target, threshold=0.8)
-            if img_comp_obj.is_target_on_image():
-                img_comp_obj.tap_on_target()
-                wait(2)
-                take_screenshot()
-                # нужно перезапустить while с начала + скриншот получить!
-                break
-        # else: # если прошли по всем таршетам и не нашли как заурыть рекламу то повторяем, пока не кончится время
-        #     continue  # todo с помощью такой схемы попадаем в цикл
-
-
-
-        # мб добавить проверку на RESUME и затем ждать 25 секунд
-        # можно ли системную кнопку back назать если RESUME появилось
-
-        if check_func():
-            logger.info("Реклама закончилась. Вернулись в меню.")
-            break
-
-        if is_google_play():
-            tap_system_button_back()
-            wait(1)
-
-    else:
-        logger.error("За 90 секунд не получилось закрыть рекламу")
+        logger.error("Не получилось вернутся в предыдущее меню")
         stop()

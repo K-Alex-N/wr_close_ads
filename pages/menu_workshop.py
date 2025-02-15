@@ -1,6 +1,6 @@
 import time
 
-from app.utilites import take_screenshot, ImageComparison
+from app.utils import take_screenshot, ImageComparison
 from pages.base_page import is_target_on_screen, tap_button_get, is_button_get_on_screen, find_and_tap, stop, \
     back_and_check, is_button_repeat_on_screen, tap_button_repeat
 from pages.main_menu import open_menu_workshop_lev1, is_main_menu
