@@ -13,20 +13,34 @@ from pages.targets import Targets
 from settings import SCREENSHOTS_DIR
 
 
-def is_target_on_screen(target, number_of_attempts=1):
-    # todo переписать эту функцию без использования класса ImageComparison
+def is_target_on_screen(target, threshold=0.8, method=5, number_of_attempts=1):
 
-    for _ in range(number_of_attempts):
-        img_comp_obj = ImageComparison(target)
-        if img_comp_obj.is_target_on_image():
-            return True
+    # for _ in range(number_of_attempts):
 
-        if number_of_attempts > 1:
-            take_screenshot()
+    img = cv.imread(get_last_screenshot_path(), 0)
+    logger.info(f"Ищем: {target}")
+    result = cv.matchTemplate(img, target, method)
+    _, max_val, _, max_loc = cv.minMaxLoc(result)
 
-    else:
-        logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
-        return False
+    if max_val >= threshold:
+        return True
+    return False
+
+
+        # logger.info(f"{attempt + 1} attempt")
+        # take_screenshot()
+
+
+        # img_comp_obj = ImageComparison(target)
+        # if img_comp_obj.is_target_on_image():
+        #     return True
+
+        # if number_of_attempts > 1:
+        #     take_screenshot()
+
+    # else:
+    #     logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
+    #     return False
 
 
 def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of_attempts=1):
@@ -65,13 +79,16 @@ def find_tap_and_check(target, check_func):
         logger.info(f"{attempt + 1} попытка проверки условия: {check_func}")
         take_screenshot()
         if check_func():
+            logger.info(f"Условие {check_func} выполнено.")
             return True
     else:
-        logger.info(f"Условие {check_func} не выполнено. Было {attempt + 1} попытки")
+        logger.error(f"Условие {check_func} не выполнено. Было {attempt + 1} попытки")
         stop()
+
 
 def tap_all_buttons_on_screen(check_func, act_func, success_msg):
     while True:
+        take_screenshot()
         if check_func():
             act_func()
             continue
@@ -79,7 +96,9 @@ def tap_all_buttons_on_screen(check_func, act_func, success_msg):
             logger.info(success_msg)
             break
 
+
 last_screen = None
+
 
 def take_screenshot():
     # Можно ли это как то под общую обертку (как в модуле adb) запихнуть?
@@ -89,6 +108,7 @@ def take_screenshot():
         subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
     last_screen = screenshot_name
+
 
 def get_last_screenshot_path():
     files = [os.path.join(SCREENSHOTS_DIR, file) for file in os.listdir(SCREENSHOTS_DIR)]
@@ -155,6 +175,9 @@ def tap_button_watch():
     # img = "images/screenshots/specials.png"
     for _ in range(30):
         take_screenshot()
+
+        if is_target_on_screen(target):
+            find_and_tap(target)
         img_comp_obj = ImageComparison(target, method=method)
         if img_comp_obj.is_target_on_image():
             img_comp_obj.tap_on_target()
@@ -299,19 +322,14 @@ def watch_and_close_ad(check_func):
     wait(2)  # wait for ad start
     logger.info("Начался просмотр рекламы\n")
     targets = Targets.for_closing_ads()
+
     start_time = time.time()
     while time.time() - start_time < 90:
         take_screenshot()
         for target in targets:
-            # if is_target_on_screen(targets, threshold=0.8):
 
             if is_target_on_screen(target):
                 find_and_tap(target)
-
-
-            img_comp_obj = ImageComparison(target, threshold=0.8)
-            if img_comp_obj.is_target_on_image():
-                img_comp_obj.tap_on_target()
                 wait(2)
                 take_screenshot()
                 break
@@ -331,7 +349,6 @@ def watch_and_close_ad(check_func):
     else:
         logger.error("За 90 секунд не получилось закрыть рекламу")
         stop()
-
 
 class ImageComparison:
 
