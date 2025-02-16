@@ -3,16 +3,12 @@ import os
 from settings import TARGETS_DIR
 
 
-# WORK_DIR = os.path.dirname(os.path.abspath(os.curdir))
-# TARGETS_DIR = os.path.join(WORK_DIR, "images", "targets")
-
-
 class Targets:
     loader = os.path.join(TARGETS_DIR, "loader.png")
-
     button_ok = os.path.join(TARGETS_DIR, "ok.png")
     button_get = os.path.join(TARGETS_DIR, "get.png")
     button_repeat = os.path.join(TARGETS_DIR, "repeat.png")
+    button_resume = os.path.join(TARGETS_DIR, "resume.png")
 
     back_buttons = [
         os.path.join(TARGETS_DIR, "back.png"),
@@ -26,7 +22,7 @@ class Targets:
     ]
 
     intro_targets = [
-        os.path.join(TARGETS_DIR, "yes.png"), # должно быть первым чтобы не попасть в зацыкливание при one-time offer
+        os.path.join(TARGETS_DIR, "yes.png"),  # д.б. первым чтобы не попасть в зацыкливание если будет one-time offer
         os.path.join(TARGETS_DIR, "close_first_windows.png"),
         button_ok,
     ]
@@ -44,24 +40,20 @@ class Targets:
         SPECIALS_DIR = os.path.join(TARGETS_DIR, "menu", "specials")
 
         identifier = os.path.join(SPECIALS_DIR, "specials.png")
-        # back_to_main_menu = os.path.join(TARGETS_DIR, to_hangar.png"
         button_watch = os.path.join(SPECIALS_DIR, "watch.png")
 
     class SupplyCenterMenu:
         SUPPLY_CENTER_DIR = os.path.join(TARGETS_DIR, "menu", "supply_center")
 
         identifier = os.path.join(SUPPLY_CENTER_DIR, "supply_center.png")
-        # back_to_main_menu = os.path.join(TARGETS_DIR, back.png"
         button_get_supplies = os.path.join(SUPPLY_CENTER_DIR, "get_supplies.png")
         button_get_more = os.path.join(SUPPLY_CENTER_DIR, "get_more.png")
-        # open_ad  =   get more
 
     class BlackMarketMenu:
         BLACK_MARKET_DIR = os.path.join(TARGETS_DIR, "menu", "black_market")
 
         identifier = os.path.join(BLACK_MARKET_DIR, "black_market.png")
         button_open_for_free = os.path.join(BLACK_MARKET_DIR, "open_for_free.png")
-        # open_ad  =   open_for_free
         bronze_chest_menu = os.path.join(BLACK_MARKET_DIR, "bronze_chest.png")
 
     class WorkshopMenu:

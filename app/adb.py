@@ -5,8 +5,6 @@
 import subprocess
 from typing import Union
 
-from PIL.ImageChops import offset
-
 from log.log import logger
 
 
@@ -18,14 +16,11 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
                             text=True)
     if result.returncode != 0:
         logger.error(f'Failed execute command: {result.stderr}')
+        from app.utils import stop
+        stop()
 
     return result
 
-
-# def start_adb_connection():
-#     logger.info("Запуск соединения с телефоном")
-#     execute("adb tcpip 5555")
-#     execute("adb connect 192.168.1.46:5555")
 
 def start_adb_connection():
     print("Open on your smartphone > Wireless debugging > Pair device with pairing code")
@@ -34,7 +29,9 @@ def start_adb_connection():
     addr = f"192.168.1.46:{port} {pwd}"
     msg = f"adb pair {addr}"
     execute(msg)
-    logger.info("Device paired successfully")
+    print(msg)
+    print("Wait for 'Wireless debugging connected' message appear")
+    input("After tap any button")
 
 
 def start_app():
@@ -53,6 +50,7 @@ def tap_system_button_back():
 
 # sound ---------------
 
+
 def set_media_sound_volume(volume: int):
     execute(f"adb shell cmd media_session volume --show --stream 3 --set {volume}")
 
@@ -68,6 +66,7 @@ def set_max_media_sound():
 
 
 # swipe ---------------
+
 
 def swipe(x1, y1, x2, y2, duration=500):
     execute(f"adb shell input swipe {x1} {y1} {x2} {y2} {duration}")

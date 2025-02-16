@@ -1,6 +1,6 @@
-from app.utils import wait, take_screenshot, stop, ImageComparison
+from app.utils import wait, take_screenshot, stop, ImageComparison, is_target_on_screen, find_and_tap
 from log.log import logger
-from pages.base_page import is_loader_on_screen
+from pages.common import is_loader_on_screen
 from pages.main_menu import is_main_menu
 from pages.targets import Targets
 
@@ -28,10 +28,8 @@ def close_intro():
                 continue
 
             for target in targets:
-                logger.info(f"Ищем: {target}")
-                img_comp_obj = ImageComparison(target)
-                if img_comp_obj.is_target_on_image():
-                    img_comp_obj.tap_on_target()
+                if is_target_on_screen(target):
+                    find_and_tap(target)
                     break
 
             if is_main_menu():

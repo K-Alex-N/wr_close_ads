@@ -1,4 +1,4 @@
-from pages.base_page import is_target_on_screen, find_and_tap
+from app.utils import is_target_on_screen, find_and_tap
 from pages.targets import Targets
 
 
