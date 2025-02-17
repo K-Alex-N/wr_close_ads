@@ -1,4 +1,5 @@
-from app.utils import tap_all_buttons_on_screen, take_screenshot
+from app.utils import tap_all_buttons_on_screen
+from app.screenshot import take_screenshot
 from pages.common import is_button_get_on_screen, tap_button_get, is_button_repeat_on_screen, tap_button_repeat, \
     back_and_check
 from pages.main_menu import open_menu_workshop_lev1, is_main_menu

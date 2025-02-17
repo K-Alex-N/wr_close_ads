@@ -77,7 +77,8 @@ def tap_button_ok_and_check(check_func):
 
 
 def back_and_check(check_func, to_take_new_screenshot=False):
-    from app.utils import take_screenshot, stop, wait
+    from app.utils import stop, wait
+    from app.screenshot import take_screenshot
 
     if to_take_new_screenshot:
         take_screenshot()

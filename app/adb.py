@@ -60,9 +60,9 @@ def turn_off_media_sound():
     set_media_sound_volume(0)
 
 
-def set_max_media_sound():
-    logger.info("Устанавливаем максимальный уровень громкости музыки")
-    set_media_sound_volume(15)
+def set_medium_media_sound_level():
+    logger.info("Устанавливаем средний уровень громкости музыки")
+    set_media_sound_volume(7)
 
 
 # swipe ---------------

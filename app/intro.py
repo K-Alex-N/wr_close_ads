@@ -1,4 +1,5 @@
-from app.utils import wait, take_screenshot, stop, ImageComparison, is_target_on_screen, find_and_tap
+from app.utils import wait, stop, ImageComparison, is_target_on_screen, find_and_tap
+from app.screenshot import take_screenshot
 from log.log import logger
 from pages.common import is_loader_on_screen
 from pages.main_menu import is_main_menu

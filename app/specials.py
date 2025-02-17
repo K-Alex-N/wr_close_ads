@@ -1,5 +1,6 @@
 from app.adb import swipe_left, tap
-from app.utils import take_screenshot, get_coords_of_active_button, watch_and_close_ad
+from app.utils import get_coords_of_active_button, watch_and_close_ad
+from app.screenshot import take_screenshot
 from log.log import logger
 from pages.common import is_button_get_on_screen, tap_button_get_and_check, tap_button_ok_and_check, back_and_check, \
     is_button_ok_on_screen
@@ -10,6 +11,7 @@ from pages.menu_specials import is_menu_special
 def try_get_button_watch_coords():
     """"
     ищем кнопку просмотра рекламы на всех страницах в меню specials
+    если не нашлось на текущей странице то выходим в главное меню и снова заходим
     """
     # собрать все номера (а точнее номер 2 и 3)
     # если обнаружили 3 то ставим 3 цикла если 2 то два цикла
@@ -26,15 +28,11 @@ def try_get_button_watch_coords():
 
     # Возможно определение активной страницы по цвету кнопки
 
-    # is_page_2_present()
-    # switch_to_next_page()
-
 
 def try_get_button_watch_coords_on_current_page():
     """
     Посмотреть рекламу на всей странице.
-    Для этого смотрим рекламу на текущее странице,
-    если не нашлось то сдвигаем экран влево и ищем еще раз
+    Для этого смотрим рекламу на текущее странице, если не нашлось то сдвигаем экран влево и ищем еще раз
     """
     for _ in range(2):
         take_screenshot()
@@ -49,6 +47,12 @@ def try_get_button_watch_coords_on_current_page():
 
 # main function
 def watch_all_ads_in_menu_specials():
+    take_screenshot()
+
+    if not is_menu_specials_icon_on_screen():
+        logger.info("Иконки меню specials нет.\n")
+        return
+
     open_menu_special()
 
     while True:  # не известно сколько рекламы будет на странице и сколько страниц
@@ -63,3 +67,4 @@ def watch_all_ads_in_menu_specials():
         tap_button_ok_and_check(is_menu_special)
 
     back_and_check(is_main_menu)
+    logger.info("Просмотр рекламы в меню specials закончен.\n")

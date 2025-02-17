@@ -1,5 +1,3 @@
-import os
-import subprocess
 import sys
 import time
 
@@ -7,18 +5,18 @@ import cv2 as cv
 import numpy as np
 
 from app.adb import tap, tap_system_button_back
+from app.screenshot import take_screenshot, get_last_screenshot_path
 from log.log import logger
 
 from pages.targets import Targets
-from settings import SCREENSHOTS_DIR
 
 
-def is_target_on_screen(target, threshold=0.8, method=5, number_of_attempts=1):
-
+def is_target_on_screen(target_path, threshold=0.8, method=5, number_of_attempts=1):
     # for _ in range(number_of_attempts):
-
+    target = cv.imread(target_path, 0)
     img = cv.imread(get_last_screenshot_path(), 0)
-    logger.info(f"Ищем: {target}")
+    logger.info(f"Ищем: {target_path}")
+
     result = cv.matchTemplate(img, target, method)
     _, max_val, _, max_loc = cv.minMaxLoc(result)
 
@@ -26,17 +24,15 @@ def is_target_on_screen(target, threshold=0.8, method=5, number_of_attempts=1):
         return True
     return False
 
+    # logger.info(f"{attempt + 1} attempt")
+    # take_screenshot()
 
-        # logger.info(f"{attempt + 1} attempt")
-        # take_screenshot()
+    # img_comp_obj = ImageComparison(target)
+    # if img_comp_obj.is_target_on_image():
+    #     return True
 
-
-        # img_comp_obj = ImageComparison(target)
-        # if img_comp_obj.is_target_on_image():
-        #     return True
-
-        # if number_of_attempts > 1:
-        #     take_screenshot()
+    # if number_of_attempts > 1:
+    #     take_screenshot()
 
     # else:
     #     logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
@@ -95,26 +91,6 @@ def tap_all_buttons_on_screen(check_func, act_func, success_msg):
         else:
             logger.info(success_msg)
             break
-
-
-last_screen = None
-
-
-def take_screenshot():
-    # Можно ли это как то под общую обертку (как в модуле adb) запихнуть?
-    logger.info("Получаем скриншот")
-    screenshot_name = os.path.join(SCREENSHOTS_DIR, f"{time.time()}.png")
-    with open(screenshot_name, "wb") as file:
-        subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
-
-    last_screen = screenshot_name
-
-
-def get_last_screenshot_path():
-    files = [os.path.join(SCREENSHOTS_DIR, file) for file in os.listdir(SCREENSHOTS_DIR)]
-    last_screenshot_path = max(files, key=os.path.getctime)
-    logger.info(f"Берем скриншот: {last_screenshot_path}")
-    return last_screenshot_path
 
 
 def stop():
@@ -319,13 +295,14 @@ def get_coords_of_active_button():
 def watch_and_close_ad(check_func):
     from pages.common import is_resume_on_screen, tap_button_resume, is_google_play_on_screen
 
-    wait(2)  # wait for ad start
+    wait(5)  # wait for ad start
     logger.info("Начался просмотр рекламы\n")
     targets = Targets.for_closing_ads()
 
     start_time = time.time()
-    while time.time() - start_time < 90:
+    while time.time() - start_time < 120:
         take_screenshot()
+        print(targets)
         for target in targets:
 
             if is_target_on_screen(target):
@@ -339,7 +316,7 @@ def watch_and_close_ad(check_func):
             wait(25)
 
         if check_func():
-            logger.info("Реклама закончилась. Вернулись в меню.")
+            logger.info("Реклама закончилась. Вернулись в меню.\n")
             break
 
         if is_google_play_on_screen():
@@ -349,6 +326,7 @@ def watch_and_close_ad(check_func):
     else:
         logger.error("За 90 секунд не получилось закрыть рекламу")
         stop()
+
 
 class ImageComparison:
 
