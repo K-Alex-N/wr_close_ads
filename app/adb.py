@@ -8,7 +8,7 @@ import subprocess
 from log.logger import logger
 
 
-# todo мб убрать list из аннотации типов. 2) зачем нам возвращать результат команды?
+# todo зачем нам возвращать результат команды?
 def execute(command: str) -> subprocess.CompletedProcess:
     command = command.split()
     result = subprocess.run(command,
@@ -21,7 +21,7 @@ def execute(command: str) -> subprocess.CompletedProcess:
     return result
 
 
-def start_adb_connection():
+def pair_device_via_wifi():
     print("Open on your smartphone > Wireless debugging > Pair device with pairing code")
     port = input("Enter port number: ")
     pwd = input("Enter 6 digits password: ")
