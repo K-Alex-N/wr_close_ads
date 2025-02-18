@@ -1,5 +1,5 @@
 from app.utils import is_target_on_screen, find_and_tap, find_tap_and_check
-from log.log import logger
+from log.logger import logger
 from pages.targets import Targets
 
 
@@ -76,18 +76,15 @@ def tap_button_ok_and_check(check_func):
 # miscellaneous
 
 
-def back_and_check(check_func, to_take_new_screenshot=False):
+def back_and_check(check_func):
     from app.utils import stop, wait
     from app.screenshot import take_screenshot
-
-    if to_take_new_screenshot:
-        take_screenshot()
 
     targets = Targets.back_buttons
     for target in targets:
         if is_target_on_screen(target):
             find_and_tap(target)
-            wait(1)
+            wait(1, "Ждем загрузку страницы")
             take_screenshot()
             break
 

@@ -6,49 +6,40 @@ import numpy as np
 
 from app.adb import tap, tap_system_button_back
 from app.screenshot import take_screenshot, get_last_screenshot_path
-from log.log import logger
-
+from log.logger import logger
 from pages.targets import Targets
 
 
-def is_target_on_screen(target_path, threshold=0.8, method=5, number_of_attempts=1):
-    # for _ in range(number_of_attempts):
-    target = cv.imread(target_path, 0)
-    img = cv.imread(get_last_screenshot_path(), 0)
+# todo мб перенести то где используется opencv в отдельный файл
+
+def is_target_on_screen(target_path, threshold=0.8, method=5):
     logger.info(f"Ищем: {target_path}")
 
+    target = cv.imread(target_path, 0)
+    img = cv.imread(get_last_screenshot_path(), 0)
+
     result = cv.matchTemplate(img, target, method)
-    _, max_val, _, max_loc = cv.minMaxLoc(result)
+    _, max_val, _, _ = cv.minMaxLoc(result)
 
     if max_val >= threshold:
         return True
+
+    logger.info(f"Target {target} did not found. Value: {max_val}")
     return False
 
-    # logger.info(f"{attempt + 1} attempt")
-    # take_screenshot()
 
-    # img_comp_obj = ImageComparison(target)
-    # if img_comp_obj.is_target_on_image():
-    #     return True
-
-    # if number_of_attempts > 1:
-    #     take_screenshot()
-
-    # else:
-    #     logger.info(f"Target {target} did not found after {number_of_attempts} attempts")
-    #     return False
-
-
-def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of_attempts=1):
+def find_and_tap(target_path, img_path=None, method=5, threshold=0.8, number_of_attempts=1):
+    logger.info(f"Ищем: {target_path}")
     target = cv.imread(target_path, 0)
 
     for attempt in range(number_of_attempts):
+
         # debug
         if img_path:
             img = cv.imread(img_path, 0)
         else:
             img = cv.imread(get_last_screenshot_path(), 0)
-        logger.info(f"Ищем: {target_path}")
+
         result = cv.matchTemplate(img, target, method)
         _, max_val, _, max_loc = cv.minMaxLoc(result)
 
@@ -70,7 +61,7 @@ def find_and_tap(target_path, img_path=None, method=5, threshold=0.87, number_of
 
 def find_tap_and_check(target, check_func):
     find_and_tap(target)
-    wait(1)
+    wait(1, "Ждем загрузку страницы")
     for attempt in range(3):
         logger.info(f"{attempt + 1} попытка проверки условия: {check_func}")
         take_screenshot()
@@ -154,12 +145,15 @@ def tap_button_watch():
 
         if is_target_on_screen(target):
             find_and_tap(target)
+        # todo убрать ImageComparison из этой функции
+        # todo протестировать распознование цветной кнопки только за счет разных методов распознования
+
         img_comp_obj = ImageComparison(target, method=method)
         if img_comp_obj.is_target_on_image():
             img_comp_obj.tap_on_target()
             return
         else:
-            wait(1)
+            wait(1, "Ждем загрузку страницы")
             continue
 
 
@@ -245,8 +239,8 @@ def tap_button_watch():
 #     img_comp_obj.tap_on_target()
 
 
-def wait(sec: int):
-    logger.info(f"Ждем {sec} секунд")
+def wait(sec: int, msg: str):
+    logger.info(f"{msg}. {sec} секунд. ")
     time.sleep(sec)
 
 
@@ -295,25 +289,24 @@ def get_coords_of_active_button():
 def watch_and_close_ad(check_func):
     from pages.common import is_resume_on_screen, tap_button_resume, is_google_play_on_screen
 
-    wait(5)  # wait for ad start
+    wait(5, "Ждем загрузку рекламы и пропускаем начало")
     logger.info("Начался просмотр рекламы\n")
     targets = Targets.for_closing_ads()
 
     start_time = time.time()
     while time.time() - start_time < 120:
         take_screenshot()
-        print(targets)
         for target in targets:
 
             if is_target_on_screen(target):
                 find_and_tap(target)
-                wait(2)
+                wait(2, "Ждем загрузку страницы")
                 take_screenshot()
                 break
 
         if is_resume_on_screen():  # значит крестик закрытия рекламы появляется до окончания времени
             tap_button_resume()
-            wait(25)
+            wait(25, "Ждем примерное окончание рекламы")
 
         if check_func():
             logger.info("Реклама закончилась. Вернулись в меню.\n")
@@ -321,10 +314,10 @@ def watch_and_close_ad(check_func):
 
         if is_google_play_on_screen():
             tap_system_button_back()
-            wait(1)
+            wait(1, "Ждем загрузку страницы")
 
     else:
-        logger.error("За 90 секунд не получилось закрыть рекламу")
+        logger.error("За 120 секунд не получилось закрыть рекламу")
         stop()
 
 
@@ -353,7 +346,6 @@ class ImageComparison:
         result = cv.matchTemplate(self.img, self.target, self.method)
         min_val, max_val, min_loc, max_loc = cv.minMaxLoc(result)
 
-        # logger.info(f"Трэшхолд = {max_val}")
         if max_val >= self.threshold:
             if self.method == 5:
                 self.save_top_left_target_coords(max_loc)

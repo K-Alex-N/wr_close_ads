@@ -2,11 +2,10 @@ import os
 import subprocess
 import time
 
-from log.log import logger
+from log.logger import logger
 from settings import SCREENSHOTS_DIR
 
 last_screenshot = None
-
 
 def take_screenshot():
     logger.info("Получаем новый скриншот")

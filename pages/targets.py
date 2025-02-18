@@ -29,7 +29,6 @@ class Targets:
 
     class MainMenu:
         MAIN_MENU_DIR = os.path.join(TARGETS_DIR, "menu", "main")
-
         identifier = os.path.join(MAIN_MENU_DIR, "to_battle.png")
         menu_specials_icon = os.path.join(MAIN_MENU_DIR, "basket.png")
         menu_supply_center_icon = os.path.join(MAIN_MENU_DIR, "supply_center_icon.png")
@@ -38,27 +37,23 @@ class Targets:
 
     class SpecialsMenu:
         SPECIALS_DIR = os.path.join(TARGETS_DIR, "menu", "specials")
-
         identifier = os.path.join(SPECIALS_DIR, "specials.png")
         button_watch = os.path.join(SPECIALS_DIR, "watch.png")
 
     class SupplyCenterMenu:
         SUPPLY_CENTER_DIR = os.path.join(TARGETS_DIR, "menu", "supply_center")
-
         identifier = os.path.join(SUPPLY_CENTER_DIR, "supply_center.png")
         button_get_supplies = os.path.join(SUPPLY_CENTER_DIR, "get_supplies.png")
         button_get_more = os.path.join(SUPPLY_CENTER_DIR, "get_more.png")
 
     class BlackMarketMenu:
         BLACK_MARKET_DIR = os.path.join(TARGETS_DIR, "menu", "black_market")
-
         identifier = os.path.join(BLACK_MARKET_DIR, "black_market.png")
         button_open_for_free = os.path.join(BLACK_MARKET_DIR, "open_for_free.png")
         bronze_chest_menu = os.path.join(BLACK_MARKET_DIR, "bronze_chest.png")
 
     class WorkshopMenu:
         WORKSHOP_DIR = os.path.join(TARGETS_DIR, "menu", "workshop")
-
         identifier_level_1 = os.path.join(WORKSHOP_DIR, "robots.png")
         identifier_level_2 = os.path.join(WORKSHOP_DIR, "workshop.png")
         workshop_level_2_icon = os.path.join(WORKSHOP_DIR, "workshop_level_2_icon.png")

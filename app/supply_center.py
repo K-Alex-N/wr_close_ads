@@ -9,7 +9,7 @@ def get_first_free_supplies():
     target = Targets.SupplyCenterMenu.button_get_supplies
     if is_target_on_screen(target):
         find_and_tap(target)
-        wait(11)  # ожидание пока рулетка крутится
+        wait(11, "Ожидание пока рулетка крутится")
 
 
 # main func
@@ -21,5 +21,5 @@ def watch_all_ads_in_supply_center_meny():
             break
         tap_button_get_more()
         watch_and_close_ad(is_menu_supply_center)
-        wait(8)  # ожидание пока рулетка крутится
+        wait(8, "Ожидание пока рулетка крутится")
     back_and_check(is_main_menu)

@@ -12,6 +12,7 @@ def watch_ad_in_black_market_menu():
     if is_button_open_for_free():
         tap_button_open_for_free()
         watch_and_close_ad(is_bronze_chest_menu)
-        wait(12)  # ждем пока анимация закончится
-        back_and_check(is_black_market_menu, to_take_new_screenshot=True)
+        wait(12, "Ждем пока анимация закончится")  #
+        take_screenshot()
+        back_and_check(is_black_market_menu)
     back_and_check(is_main_menu)

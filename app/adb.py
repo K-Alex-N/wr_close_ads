@@ -1,14 +1,15 @@
+# todo что означают все эти stdout=subprocess.PIPE и тд
 # img_raw = subprocess.run(['C:\\platform-tools\\adb.exe', 'exec-out', 'screencap',
 #                           '-p'], stdout=subprocess.PIPE).stdout  # получаем файл
 
 
 import subprocess
-from typing import Union
 
-from log.log import logger
+from log.logger import logger
 
 
-def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
+# todo мб убрать list из аннотации типов. 2) зачем нам возвращать результат команды?
+def execute(command: str) -> subprocess.CompletedProcess:
     command = command.split()
     result = subprocess.run(command,
                             stdout=subprocess.PIPE,
@@ -16,8 +17,6 @@ def execute(command: Union[list, str]) -> subprocess.CompletedProcess:
                             text=True)
     if result.returncode != 0:
         logger.error(f'Failed execute command: {result.stderr}')
-        from app.utils import stop
-        stop()
 
     return result
 
@@ -73,7 +72,6 @@ def swipe(x1, y1, x2, y2, duration=500):
 
 
 def swipe_left():
-    # offset
-    x1, x2 = 1500, 1000
+    x1, x2 = 1500, 1000  # offset -500
     y1 = y2 = 500
     swipe(x1, y1, x2, y2)

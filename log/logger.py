@@ -9,7 +9,7 @@ import logging
 # logger.addHandler(file_handler)
 
 # Конфигурация логгера
-
+# todo cleanup logger
 class ColoredFormatter(logging.Formatter):
     COLORS = {'DEBUG': '\033[94m',
               'INFO': '\033[92m',
