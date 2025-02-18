@@ -12,7 +12,6 @@ def get_first_free_supplies():
         wait(11, "Ожидание пока рулетка крутится")
 
 
-# main func
 def watch_all_ads_in_supply_center_meny():
     open_menu_supply_center()
     get_first_free_supplies()

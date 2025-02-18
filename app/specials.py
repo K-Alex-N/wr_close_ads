@@ -47,7 +47,6 @@ def try_get_button_watch_coords_on_current_page():
     return None
 
 
-# main function
 def watch_all_ads_in_menu_specials():
     if not is_menu_specials_icon_on_screen():
         logger.info("Иконки меню specials нет.\n")

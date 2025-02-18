@@ -9,12 +9,14 @@ last_screenshot = None
 
 def take_screenshot():
     logger.info("Получаем новый скриншот")
-    screenshot_name = os.path.join(SCREENSHOTS_DIR, f"{time.time()}.png")
-    with open(screenshot_name, "wb") as file:
+
+    # todo мб отправить эту команду через execute но тогда нужно еще отправить с ней параметры stdout=file, check=True
+    screenshot_path = os.path.join(SCREENSHOTS_DIR, f"{time.time()}.png")
+    with open(screenshot_path, "wb") as file:
         subprocess.run(["adb", "exec-out", "screencap", "-p"], stdout=file, check=True)
 
     global last_screenshot
-    last_screenshot = screenshot_name
+    last_screenshot = screenshot_path
 
 
 def get_last_screenshot_path():
@@ -22,5 +24,6 @@ def get_last_screenshot_path():
         logger.info(f"Берем скриншот: {last_screenshot}")
         return last_screenshot
 
+    # это нужно если запускаем скрипт не с начала
     take_screenshot()
-    get_last_screenshot_path()
+    return last_screenshot

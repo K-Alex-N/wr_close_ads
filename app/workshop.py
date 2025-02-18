@@ -14,13 +14,12 @@ def tap_all_get_buttons():
 
 
 def tap_all_repeat_buttons():
-    check_func = is_button_repeat_on_screen
-    act_func = tap_button_repeat
-    success_msg = "Все кнопки repeat нажаты"
-    tap_all_buttons_on_screen(check_func, act_func, success_msg)
+    tap_all_buttons_on_screen(
+        check_func=is_button_repeat_on_screen,
+        act_func=tap_button_repeat,
+        success_msg="Все кнопки repeat нажаты")
 
 
-# main func
 def start_all_works_in_workshop():
     take_screenshot()
     open_menu_workshop_lev1()
