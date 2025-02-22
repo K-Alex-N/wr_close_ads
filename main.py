@@ -15,7 +15,7 @@ close_intro()
 watch_all_ads_in_menu_specials()
 watch_ad_in_black_market_menu()
 watch_all_ads_in_supply_center_meny()
-watch_ad_in_black_market_menu()  # добавляем снова т.к. через 30 секунд приз восстанавливается
+watch_ad_in_black_market_menu()  # добавляем снова т.к. маленький сундук восстанавливается через 30 секунд
 start_all_works_in_workshop()
 set_medium_media_sound_level()
 logger.info(">>>END<<<")
