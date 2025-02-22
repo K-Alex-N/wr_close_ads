@@ -24,6 +24,5 @@ def get_last_screenshot_path():
         logger.info(f"Берем скриншот: {last_screenshot}")
         return last_screenshot
 
-    # это нужно если запускаем скрипт не с начала
     take_screenshot()
     return last_screenshot

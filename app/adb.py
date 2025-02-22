@@ -1,15 +1,9 @@
-# todo что означают все эти stdout=subprocess.PIPE и тд
-# img_raw = subprocess.run(['C:\\platform-tools\\adb.exe', 'exec-out', 'screencap',
-#                           '-p'], stdout=subprocess.PIPE).stdout  # получаем файл
-
-
 import subprocess
 
 from log.logger import logger
 
 
-# todo зачем нам возвращать результат команды?
-def execute(command: str) -> subprocess.CompletedProcess:
+def execute(command: str):
     command = command.split()
     result = subprocess.run(command,
                             stdout=subprocess.PIPE,
@@ -17,8 +11,6 @@ def execute(command: str) -> subprocess.CompletedProcess:
                             text=True)
     if result.returncode != 0:
         logger.error(f'Failed execute command: {result.stderr}')
-
-    return result
 
 
 def pair_device_via_wifi():
