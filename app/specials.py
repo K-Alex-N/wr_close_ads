@@ -27,7 +27,7 @@ def try_get_button_watch_coords():
 def try_get_button_watch_coords_on_current_page():
     """
     Посмотреть рекламу на всей странице.
-    Сначала смотрим рекламу на текущей странице, затем сдвигаем экран влево и ищем еще раз
+    Сначала смотрим рекламу на текущей странице, затем "свайп" экрана влево и ищем еще раз
     """
     for _ in range(2):
         take_screenshot()
@@ -47,7 +47,7 @@ def watch_all_ads_in_menu_specials():
 
     open_menu_special()
 
-    while True:  # бесконечный цикл т.к. не известно сколько рекламы будет на странице и сколько страниц
+    while True:  # бесконечный цикл т.к. не известно сколько будет рекламы на странице и сколько будет страниц
         coords = try_get_button_watch_coords()
         if coords is None:
             break  # all ads are watched. Now we are in main menu
