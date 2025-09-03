@@ -53,7 +53,7 @@ def watch_all_ads_in_menu_specials():
             break  # all ads are watched. Now we are in main menu
         tap(*coords)
         watch_and_close_ad(is_menu_special)
-        if not is_button_get_on_screen():  # иногда после рекламы нет вознаграждения т.к. нужно посмотреть рекламу еще раз
+        if not is_button_get_on_screen():  # Иногда после рекламы нет вознаграждения > нужно посмотреть рекламу еще раз
             continue
         tap_button_get_and_check(is_button_ok_on_screen)
         tap_button_ok_and_check(is_menu_special)

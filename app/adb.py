@@ -20,7 +20,6 @@ def pair_device_via_wifi():
     addr = f"192.168.1.46:{port} {pwd}"
     msg = f"adb pair {addr}"
     execute(msg)
-    print(msg)
     print("Wait for 'Wireless debugging connected' message appear")
     input("After tap any button")
 
